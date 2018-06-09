@@ -21,12 +21,14 @@ namespace derp
 
         }
 
+        //Setter funtion to set the RTU update time, in seconds
         public void setUpdateTime(int time)
         {
             this.rtuUpdateTime = time;
 
         }
 
+        //Getter funtion to set the RTU update time, in seconds
         public int getUpdateTime(int time)
         {
             return this.rtuUpdateTime;

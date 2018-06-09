@@ -20,13 +20,10 @@ namespace derp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int updateTimer;
         private piGetter pigetter;
         private rtuSender rtusender;
-        private String mehwhatever;
-        private DateTime EndTime;
-        private String StartDateTime;
-        private String EndDateTime;
+        private String startDateTime;
+        private String endDateTime;
 
 
         public MainWindow()
@@ -38,11 +35,17 @@ namespace derp
             this.pigetter = new piGetter();
             this.rtusender = new rtuSender(getUpdateTime());
 
+            //What is the current start time
             //initialize parameters here
-            DatePicker startDatePicker = new DatePicker();
-            DatePicker endDatePicker = new DatePicker();
-            TimePicker startTimePicker = new TimePicker();
-            TimePicker endTimePicker = new TimePicker();
+
+            DateTime defaultStart = DateTime.Now;
+            DateTime defaultEnd = DateTime.Now.AddHours(-1.00);
+
+            StartTimePicker.DefaultValue = defaultStart;
+            EndTimePicker.DefaultValue = defaultEnd;
+
+            this.startDateTime = defaultStart.ToString();
+            this.endDateTime = defaultEnd.ToString();
 
             //Threading setup. The threads are use for concurrency...and I don't really want these data gattering and sending operaitons on the main thread 
             //var pitask = Task.Run(() => this.pigetter);
@@ -52,19 +55,26 @@ namespace derp
         private void enable(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program enabled");
-            Console.WriteLine("Start Time: "+this.StartDateTime);
-            Console.WriteLine("End Time: "+this.EndDateTime);
-            this.pigetter.isActive(true);
+            Console.WriteLine("Start Time: "+this.startDateTime);
+            Console.WriteLine("End Time: "+this.endDateTime);
+            //Check if startDateTime or EndDateTime is empty or not. If it is empty, then throw an error to the user
+            if (this.startDateTime.Equals("") || this.endDateTime == null )
+            { 
+
+            }
+            else if (this.endDateTime.Equals("") || this.endDateTime == null)
+            {
+
+            }
+            else
+            {
+                this.pigetter.isActive(true);
+            }
         }
         private void disable(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
             this.pigetter.isActive(false);
-        }
-
-       private void getTimeStamp()
-        {
-
         }
 
         private void updateTextbox(object sender, KeyEventArgs e)
