@@ -16,8 +16,7 @@ namespace derp
     {
         private int rtuUpdateTime;
 
-        public rtuSender(int updateTime){
-            this.rtuUpdateTime = updateTime;
+        public rtuSender(){
 
         }
 

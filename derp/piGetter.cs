@@ -27,6 +27,7 @@ namespace derp
         private String endDateTime;
         private PIServers pIServers;
         private PIServer piServer;
+        private rtuSender rtu;
         //This is the array of all the potential tags in the Gorge 
         private String[] windNodePotentialTags =
         {
@@ -56,6 +57,7 @@ namespace derp
             this.aFTimeRange = new AFTimeRange(DateTime.Now.ToString(), DateTime.Now.AddHours(-1).ToString());
             this.interval = new TimeSpan(0, 5, 0);
             this.span = new AFTimeSpan(interval);
+            this.rtu = new rtuSender();
         }
 
 
@@ -63,12 +65,25 @@ namespace derp
         public void waitForResponse() { }
 
         //This returns the array. This is called by other classes
-        public void getArray() {  }
+        public List<String> getList() { return this.valueString; }
 
         //Gets the array
         private void composeArray()
         {
+            foreach (String windNodeTag in windNodePotentialTags)
+            {
+                PIPoint pi_point = PIPoint.FindPIPoint(this.piServer, windNodeTag);
+                //tagList.Add(pi_point.RecordedValues(aFTimeRange, OSIsoft.AF.Data.AFBoundaryType.Inside, "", false).ToString());
+                AFValues interpolated = pi_point.InterpolatedValues(this.aFTimeRange, this.span, "", false);
 
+                foreach (AFValue value in interpolated)
+                {
+                    String temp =windNodeTag +": " +value.Value.ToString() + "\t" + value.Timestamp.ToString();
+                    Console.WriteLine(temp);
+                    this.valueString.Add(temp);
+                }
+            }
+            Console.WriteLine("Herpa derpa derp");
         }
 
         public void setStartDateTime(String date) { this.startDateTime = date; }
@@ -80,11 +95,13 @@ namespace derp
             if (state)
             {
                 //Fetch PI Data
-
+                composeArray();
+                //Raise inerrupt
+                
             }
             else
             {
-                // Stop everything
+                //Drop interrupt
 
             }
             

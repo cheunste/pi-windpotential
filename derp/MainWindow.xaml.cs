@@ -33,7 +33,7 @@ namespace derp
 
             //Initialize the classes
             this.pigetter = new piGetter();
-            this.rtusender = new rtuSender(getUpdateTime());
+            this.rtusender = new rtuSender();
 
             //What is the current start time
             //initialize parameters here
@@ -46,6 +46,9 @@ namespace derp
 
             this.startDateTime = defaultStart.ToString();
             this.endDateTime = defaultEnd.ToString();
+
+            pigetter.setStartDateTime(defaultStart.ToString());
+            pigetter.setEndDateTime(defaultEnd.ToString());
 
             //Threading setup. The threads are use for concurrency...and I don't really want these data gattering and sending operaitons on the main thread 
             //var pitask = Task.Run(() => this.pigetter);
