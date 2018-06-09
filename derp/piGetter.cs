@@ -20,7 +20,15 @@ namespace derp
     class piGetter
     {
         private String startDateTime;
-        private String endDateTime; 
+        private String endDateTime;
+        private String[] windNodePotentialTags =
+        {
+                "KL1.WF.WPot.CORE", "KL2.WF.WPot.CORE", "KL3A.WF.WPot.CORE",
+                "KL3GE.WF.WPot.CORE", "KL3SW.WF.WPot.CORE", "KL3MHI.WF.WPot.CORE",
+                "HC1.WF.WPot.CORE", "SP1.WF.WPot.CORE", "LJ2A.WF.WPot.CORE",
+                "LJ2B.WF.WPot.CORE", "PS1.WF.WPot.CORE", "BH1.WF.WPot.CORE",
+                "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE"
+        };
 
         //Constructor
         public piGetter()

@@ -113,7 +113,9 @@ namespace derp
             pigetter.setEndDateTime(getDateTime(e.NewValue));
         }
 
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
-
+        }
     }
 }
