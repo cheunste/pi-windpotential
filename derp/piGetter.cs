@@ -54,9 +54,7 @@ namespace derp
             this.piServer = pIServers.DefaultPIServer;
 
             this.valueString = new List<String>();
-            this.aFTimeRange = new AFTimeRange(DateTime.Now.ToString(), DateTime.Now.AddHours(-1).ToString());
-            this.interval = new TimeSpan(0, 5, 0);
-            this.span = new AFTimeSpan(interval);
+
             this.rtu = new rtuSender();
         }
 
@@ -70,6 +68,10 @@ namespace derp
         //Gets the array
         private void composeArray()
         {
+            this.aFTimeRange = new AFTimeRange(this.startDateTime, this.endDateTime);
+            this.interval = new TimeSpan(0, 5, 0);
+            this.span = new AFTimeSpan(interval);
+
             foreach (String windNodeTag in windNodePotentialTags)
             {
                 PIPoint pi_point = PIPoint.FindPIPoint(this.piServer, windNodeTag);
@@ -111,6 +113,18 @@ namespace derp
         //This function stops the current array that is being processed
         public void stopArray(){
 
+        }
+
+        //This function essentually restarts the whole PI Gattering process from scratch,
+        // which means it will clear the valueList array,  set the time
+        // rebuild the array, etc
+        public void restart() {
+
+            //TODO:
+            //clear the valuelist array
+            //update the time methods
+            //recompile the array
+            
         }
     }
 

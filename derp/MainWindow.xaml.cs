@@ -38,8 +38,8 @@ namespace derp
             //What is the current start time
             //initialize parameters here
 
-            DateTime defaultStart = DateTime.Now;
-            DateTime defaultEnd = DateTime.Now.AddHours(-1.00);
+            DateTime defaultStart = DateTime.Now.AddHours(-1.00) ;
+            DateTime defaultEnd = DateTime.Now;
 
             StartTimePicker.DefaultValue = defaultStart;
             EndTimePicker.DefaultValue = defaultEnd;
@@ -110,10 +110,12 @@ namespace derp
         private void startDateListener(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             pigetter.setStartDateTime(getDateTime(e.NewValue));
+            pigetter.restart();
         }
         private void endDateListener(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             pigetter.setEndDateTime(getDateTime(e.NewValue));
+            pigetter.restart();
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
