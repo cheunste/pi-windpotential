@@ -38,7 +38,7 @@ namespace derp
                 "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE"
         };
         //This is the list of values that is fetched from PI
-        private List<String> valueString;
+        private List<String[]> valueList;
         private AFTimeRange aFTimeRange;
         private TimeSpan interval;
         private AFTimeSpan span;
@@ -53,7 +53,7 @@ namespace derp
             this.pIServers = new PIServers();
             this.piServer = pIServers.DefaultPIServer;
 
-            this.valueString = new List<String>();
+            this.valueList = new List<String[]>();
 
             this.rtu = new rtuSender();
         }
@@ -63,7 +63,7 @@ namespace derp
         public void waitForResponse() { }
 
         //This returns the array. This is called by other classes
-        public List<String> getList() { return this.valueString; }
+        public List<String[]> getList() { return this.valueList; }
 
         //Gets the array
         private void composeArray()
@@ -80,9 +80,9 @@ namespace derp
 
                 foreach (AFValue value in interpolated)
                 {
-                    String temp =windNodeTag +": " +value.Value.ToString() + "\t" + value.Timestamp.ToString();
-                    Console.WriteLine(temp);
-                    this.valueString.Add(temp);
+                    String[] temp ={windNodeTag, value.Value.ToString(), value.Timestamp.ToString()};
+                    Console.WriteLine(temp[0]+", "+temp[1]+", "+temp[2]);
+                    this.valueList.Add(temp);
                 }
             }
             Console.WriteLine("Herpa derpa derp");
