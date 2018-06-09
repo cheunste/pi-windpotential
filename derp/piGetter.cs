@@ -4,6 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OSIsoft.AF.Asset;
+using OSIsoft.AF.PI;
+using OSIsoft.AF.Time;
+
 
 namespace derp
 {
@@ -21,6 +25,9 @@ namespace derp
     {
         private String startDateTime;
         private String endDateTime;
+        private PIServers pIServers;
+        private PIServer piServer;
+        //This is the array of all the potential tags in the Gorge 
         private String[] windNodePotentialTags =
         {
                 "KL1.WF.WPot.CORE", "KL2.WF.WPot.CORE", "KL3A.WF.WPot.CORE",
@@ -29,14 +36,26 @@ namespace derp
                 "LJ2B.WF.WPot.CORE", "PS1.WF.WPot.CORE", "BH1.WF.WPot.CORE",
                 "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE"
         };
+        //This is the list of values that is fetched from PI
+        private List<String> valueString;
+        private AFTimeRange aFTimeRange;
+        private TimeSpan interval;
+        private AFTimeSpan span;
 
         //Constructor
         public piGetter()
         {
-
             Console.WriteLine("End Date: " + endDateTime);
             Console.WriteLine("State Date: " + startDateTime);
 
+            //initate the server shit
+            this.pIServers = new PIServers();
+            this.piServer = pIServers.DefaultPIServer;
+
+            this.valueString = new List<String>();
+            this.aFTimeRange = new AFTimeRange(DateTime.Now.ToString(), DateTime.Now.AddHours(-1).ToString());
+            this.interval = new TimeSpan(0, 5, 0);
+            this.span = new AFTimeSpan(interval);
         }
 
 
