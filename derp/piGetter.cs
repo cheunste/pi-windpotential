@@ -28,6 +28,7 @@ namespace derp
         private PIServers pIServers;
         private PIServer piServer;
         private rtuSender rtu;
+        private InterruptManager im;
         //This is the array of all the potential tags in the Gorge 
         private String[] windNodePotentialTags =
         {
@@ -56,6 +57,7 @@ namespace derp
             this.valueList = new List<String[]>();
 
             this.rtu = new rtuSender();
+            this.im = new InterruptManager();
         }
 
 
@@ -100,13 +102,15 @@ namespace derp
         {
             if (state)
             {
+                //Raise inerrupt
+                im.programEnabled(true);
                 //Fetch PI Data
                 composeArray();
-                //Raise inerrupt
                 
             }
             else
             {
+                im.programEnabled ( false);
                 stopArray();
                 rtu.deleteAllLists();
                 //Stop interrupt

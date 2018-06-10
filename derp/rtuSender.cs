@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thread;
 
 namespace derp
 {
@@ -17,6 +18,8 @@ namespace derp
         private int rtuUpdateTime;
         private List<String[]> valueList;
         private Dictionary<String,String> piToDNPDict;
+        private Dictionary<String,int> dnpIndexDict;
+        private Dictionary<String,String> ipAddressDict;
         //The rtu List
         private List<String[]> klondikeRTUList;
         private List<String[]> bigHornRTUList;
@@ -47,7 +50,11 @@ namespace derp
         public rtuSender(){
             //Sets the dictionary that maps Tags to a site
             this.piToDNPDict = new Dictionary<String, String>();
+            this.dnpIndexDict = new Dictionary<String, int>();
+            this.ipAddressDict = new Dictionary<String,String>();
             setUpPiToDNPDict();
+            setUpdnpIndexDict();
+            setUpIPAddressDict();
             this.klondikeRTUList = new List<String[]>();
             this.bigHornRTUList = new List<String[]>();
             this.jonesRTUList = new List<String[]>();
@@ -70,6 +77,8 @@ namespace derp
 
             this.im = new InterruptManager();
         }
+
+
 
         public void deleteAllLists(){
             klondikeRTUList.RemoveAll();
@@ -112,16 +121,7 @@ namespace derp
             this.masterList.Add(bh2);
             this.masterList.Add(jc1);
         }
-        public void sendToRTU(){
-            buildMasterList();
-            foreach(List<String[]> tempList in masterList){
 
-                Console.WriteLine(tempList);
-                //Start threading here
-            }
-
-
-        }
 
         private void setUpPiToDNPDict(){
             this.piToDNPDict.Add("KL1.WF.WPot.CORE","KLON1_AGC_AvailablePwr_I");
@@ -140,6 +140,39 @@ namespace derp
             this.piToDNPDict.Add("JC1.WF.WPot.CORE","JUNCA_AGC_AvailablePwr_I");
         }
 
+        private void setUpdnpIndexDict(){
+            this.dnpIndexDict.Add("KLON1_AGC_AvailablePwr_I",26);
+            this.dnpIndexDict.Add("KLON2_AGC_AvailablePwr_I",38);
+            this.dnpIndexDict.Add("KLONA_AGC_AvailablePwr_I",86);
+            this.dnpIndexDict.Add("KLONG_AGC_AvailablePwr_I",74);
+            this.dnpIndexDict.Add("KLONS_AGC_AvailablePwr_I",50);
+            this.dnpIndexDict.Add("KLONM_AGC_AvailablePwr_I",62);
+            this.dnpIndexDict.Add("HAYCA_AGC_AvailablePwr_I",14);
+            this.dnpIndexDict.Add("STPOI_AGC_AvailablePwr_I",2);
+            this.dnpIndexDict.Add("LEJUN_AGC_AvailablePwr_I",2);
+            this.dnpIndexDict.Add("LEJU2_AGC_AvailablePwr_I",14);
+            this.dnpIndexDict.Add("PESPR_AGC_AvailablePwr_I",26);
+            this.dnpIndexDict.Add("BIGHO_AGC_AvailablePwr_I",2);
+            this.dnpIndexDict.Add("BIGH2_AGC_AvailablePwr_I",14);
+            this.dnpIndexDict.Add("JUNCA_AGC_AvailablePwr_I",2);
+        }
+
+        private void isetUpIPAddressDict(){
+            this.ipAddressDict.Add("KLON1_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("KLON2_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("KLONA_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("KLONG_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("KLONS_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("KLONM_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("HAYCA_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("STPOI_AGC_AvailablePwr_I","10.41.58.124");
+            this.ipAddressDict.Add("LEJUN_AGC_AvailablePwr_I","172.26.21.34");
+            this.ipAddressDict.Add("LEJU2_AGC_AvailablePwr_I","172.26.21.34");
+            this.ipAddressDict.Add("PESPR_AGC_AvailablePwr_I","172.26.21.34");
+            this.ipAddressDict.Add("BIGHO_AGC_AvailablePwr_I","10.41.55.20");
+            this.ipAddressDict.Add("BIGH2_AGC_AvailablePwr_I","10.41.55.20");
+            this.ipAddressDict.Add("JUNCA_AGC_AvailablePwr_I","172.21.1.19");
+        }
         //Setter funtion to set the RTU update time, in seconds
         public void setUpdateTime(int time)
         {
@@ -216,26 +249,30 @@ namespace derp
             siteArray.Add(tempArray);
         }
 
-        //This function sends the data to the RTU
-        private void compoundJSOn(){
 
-            String derp = "";
-            String data =
-                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": 111111.0, \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+        //Function to send to RTU
+        public void sendToRTU(){
+            buildMasterList();
+            foreach(List<String[]> tempList in masterList){
 
-            //while both the toggle (in GUI) is enabled and the interval flag is raised, send the data
-            foreach (String[] item in this.klondikeRTUList){
-               Console.WriteLine(item); 
+                Console.WriteLine(tempList);
+                //Start threading here
+                var thread = new Thread(compoundJSON);
+                //thread.Start(ipAddress,indexNumber,tagName,value);
             }
-            /*
-            foreach (String[] item in this.jonesRTUList){
-            }
-            foreach (String[] item in this.juniperRTUList){
-            }
-            foreach (String[] item in this.bigHornRTUList){
-            }
-            */
         }
+        //This function sends the data to the RTU
+        private void sendJSON(String ipAddress,String indexNumber,String tagName, String value){
+
+            while(this.im.isProgramEnabled){
+            }
+            String data =
+                "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
+                +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
+                +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
+        }
+
         
     }
 }

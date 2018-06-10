@@ -15,6 +15,7 @@ namespace derp
     class InterruptManager
     {
 
+        private Boolean programEnabled;
         public InterruptManager()
         {
             //TODO:
@@ -22,11 +23,19 @@ namespace derp
             // 2) Fetch their update time prameters
             
             //Create new threads and pass their time parameters
+            this.programEnabled=false;
 
         }
 
         private void onTimeChange()
         {
+        }
+
+        public void setprogramEnabled(Boolean programEnabled){
+           this.programEnabled=programEnabled;
+        }
+        public Boolean isProgramEnabled(){
+            return this.programEnabled;
         }
 
     }
