@@ -17,14 +17,31 @@ namespace derp
         private int rtuUpdateTime;
         private List<String[]> valueList;
         private Dictionary<String,String> piToDNPDict;
-        //The rtu arrays
+        //The rtu List
         private List<String[]> klondikeRTUList;
         private List<String[]> bigHornRTUList;
         private List<String[]> jonesRTUList;
         private List<String[]> juniperRTUList;
 
-        //Time related variables goes here
-        private int piTimeInterval;
+        //the site Lists
+        private List<String[]> kl1;
+        private List<String[]> kl2;
+        private List<String[]> k3A;
+        private List<String[]> k3GE;
+        private List<String[]> k3S;
+        private List<String[]> k3mhi;
+        private List<String[]> hc1;
+        private List<String[]> sp1;
+        private List<String[]> lj2a;
+        private List<String[]> lj2b;
+        private List<String[]> ps1;
+        private List<String[]> bh1;
+        private List<String[]> bh2;
+        private List<String[]> jc1;
+        private List<List<String[]>> masterList;
+
+        //Member variable to the interruptMnaager (reference)
+        private InterruptManager im;
 
         //Constructor
         public rtuSender(){
@@ -35,6 +52,75 @@ namespace derp
             this.bigHornRTUList = new List<String[]>();
             this.jonesRTUList = new List<String[]>();
             this.juniperRTUList = new List<String[]>();
+            this.kl1 = new List<String[]>();
+            this.kl2 = new List<String[]>();
+            this.k3A = new List<String[]>();
+            this.k3GE = new List<String[]>();
+            this.k3S = new List<String[]>();
+            this.k3mhi = new List<String[]>();
+            this.hc1 = new List<String[]>();
+            this.sp1 = new List<String[]>();
+            this.lj2a = new List<String[]>();
+            this.lj2b = new List<String[]>();
+            this.ps1 = new List<String[]>();
+            this.bh1 = new List<String[]>();
+            this.bh2 = new List<String[]>();
+            this.jc1 = new List<String[]>();
+            this.masterList = new List<List<String[]>>();
+
+            this.im = new InterruptManager();
+        }
+
+        public void deleteAllLists(){
+            klondikeRTUList.RemoveAll();
+            bigHornRTUList.RemoveAll();
+            jonesRTUList.RemoveAll();
+            juniperRTUList.RemoveAll();
+
+            //the site Lists
+            kl1.RemoveAll();
+            kl2.RemoveAll();
+            k3A.RemoveAll();
+            k3GE.RemoveAll();
+            k3S.RemoveAll();
+            k3mhi.RemoveAll();
+            hc1.RemoveAll();
+            sp1.RemoveAll();
+            lj2a.RemoveAll();
+            lj2b.RemoveAll();
+            ps1.RemoveAll();
+            bh1.RemoveAll();
+            bh2.RemoveAll();
+            jc1.RemoveAll();
+            masterList.RemoveAll();
+
+        }
+
+        private void buildMasterList(){
+            this.masterList.Add(kl1);
+            this.masterList.Add(kl2);
+            this.masterList.Add(k3A);
+            this.masterList.Add(k3GE);
+            this.masterList.Add(k3S);
+            this.masterList.Add(k3mhi);
+            this.masterList.Add(hc1);
+            this.masterList.Add(sp1);
+            this.masterList.Add(lj2a);
+            this.masterList.Add(lj2b);
+            this.masterList.Add(ps1);
+            this.masterList.Add(bh1);
+            this.masterList.Add(bh2);
+            this.masterList.Add(jc1);
+        }
+        public void sendToRTU(){
+            buildMasterList();
+            foreach(List<String[]> tempList in masterList){
+
+                Console.WriteLine(tempList);
+                //Start threading here
+            }
+
+
         }
 
         private void setUpPiToDNPDict(){
@@ -75,52 +161,53 @@ namespace derp
                 //based on the PI tag.
                 switch(tempArray[0]){
                     case "KL1.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.kl1,tempArray);
                         break;
                     case "KL2.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.kl2,tempArray);
                         break;
                     case "KL3A.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.k3A,tempArray);
                         break;
                     case "KL3GE.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.k3GE,tempArray);
                         break;
                     case "KL3SW.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.k3S,tempArray);
                         break;
                     case "KL3MHI.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.k3mhi,tempArray);
                         break;
                     case "HC1.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.hc1,tempArray);
                         break;
                     case "SP1.WF.WPot.CORE":
-                        addToList(this.klondikeRTUList,tempArray);
+                        addToList(this.sp1,tempArray);
                         break;
                     case "LJ2A.WF.WPot.CORE":
-                        addToList(this.jonesRTUList,tempArray);
+                        addToList(this.lj2a,tempArray);
                         break;
                     case "LJ2B.WF.WPot.CORE":
-                        addToList(this.jonesRTUList,tempArray);
+                        addToList(this.lj2b,tempArray);
                         break;
                     case "PS1.WF.WPot.CORE":
-                        addToList(this.jonesRTUList,tempArray);
+                        addToList(this.ps1,tempArray);
                         break;
                     case "BH1.WF.WPot.CORE":
-                        addToList(this.bigHornRTUList,tempArray);
+                        addToList(this.bh1,tempArray);
                         break;
                     case "BH2.WF.WPot.CORE":
-                        addToList(this.bigHornRTUList,tempArray);
+                        addToList(this.bh2,tempArray);
                         break;
                     case "JC1.WF.WPot.CORE":
-                        addToList(this.juniperRTUList,tempArray);
+                        addToList(this.jc1,tempArray);
                         break;
                 }
 
             }
+            //Put all the lists above into a master list. Now you have a way to iterate over everything
             //After splitting the arrays, you then need to send the data. 
-            sendToRTU();
+            // This might be the point where you start threading
 
         }
 
@@ -129,19 +216,25 @@ namespace derp
             siteArray.Add(tempArray);
         }
 
-        private void setPiTimeInterval(int time){
-
-}
-
         //This function sends the data to the RTU
-        private void sendToRTU(){
+        private void compoundJSOn(){
 
             String derp = "";
             String data =
                 "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": 111111.0, \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
 
-            InterruptManager im = new InterruptManager();
-
+            //while both the toggle (in GUI) is enabled and the interval flag is raised, send the data
+            foreach (String[] item in this.klondikeRTUList){
+               Console.WriteLine(item); 
+            }
+            /*
+            foreach (String[] item in this.jonesRTUList){
+            }
+            foreach (String[] item in this.juniperRTUList){
+            }
+            foreach (String[] item in this.bigHornRTUList){
+            }
+            */
         }
         
     }

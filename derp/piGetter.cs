@@ -89,7 +89,7 @@ namespace derp
                 }
                 this.rtu.setArray(this.valueList);
             }
-            Console.WriteLine("Herpa derpa derp");
+            this.rtu.sendToRTU();
         }
 
         public void setStartDateTime(String date) { this.startDateTime = date; }
@@ -108,6 +108,7 @@ namespace derp
             else
             {
                 stopArray();
+                rtu.deleteAllLists();
                 //Stop interrupt
 
 
@@ -135,7 +136,7 @@ namespace derp
 
         //method to set the PI Interval (in minute
         public void setInterval(int minuteInterval){
-            this.interval =TimeSpan(0,minuteInterval,0);
+            //this.interval(0,minuteInterval,0);
         }
         //method to get the interval. 
         public TimeSpan getInterval(){
