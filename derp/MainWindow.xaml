@@ -55,9 +55,6 @@
 
 
         </StackPanel>
-        <StackPanel>
-            <TextBlock Text="{Binding Date, StringFormat=d}" VerticalAlignment="Center" Margin="0,0,253,0" Height="45" />
-        </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="10,189,0,331" HorizontalAlignment="Left" Width="150">
             <Label x:Name="EnabledLabel" Content="Enable:" HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="16"/>
@@ -86,7 +83,7 @@
                     x:Name="BigHornTextField"
                     Margin="0,0,0,-2"
                     VerticalAlignment="Top"
-                    Height="267"
+                    Height="285"
                     AcceptsReturn="True"
                     TextWrapping="Wrap"
                     VerticalScrollBarVisibility="Auto"

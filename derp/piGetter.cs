@@ -81,9 +81,13 @@ namespace derp
                 foreach (AFValue value in interpolated)
                 {
                     String[] temp ={windNodeTag, value.Value.ToString(), value.Timestamp.ToString()};
+                    //Temp 0: Name of Wind Node Tag 
+                    //Temp 1: Value of the tag
+                    //Temp 2: Time Stamp of the tag
                     Console.WriteLine(temp[0]+", "+temp[1]+", "+temp[2]);
                     this.valueList.Add(temp);
                 }
+                this.rtu.setArray(this.valueList);
             }
             Console.WriteLine("Herpa derpa derp");
         }
@@ -103,7 +107,9 @@ namespace derp
             }
             else
             {
-                //Drop interrupt
+                stopArray();
+                //Stop interrupt
+
 
             }
             
