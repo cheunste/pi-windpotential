@@ -258,18 +258,42 @@ namespace derp
                 Console.WriteLine(tempList);
                 //Start threading here
                 var thread = new Thread(compoundJSON);
-                //thread.Start(ipAddress,indexNumber,tagName,value);
+                String dnpTag = this.dnpIndexDict[tempList[0][0]];
+                String ipAddress = this.ipAddressDict[dnpTag];
+                int indexNumber = this.dnpIndexDict[dnpTag];
+                //thread.Start(ipAddress,indexNumber,dnpTag,value);
+                /*
+                 * TODO:
+                 * - Start thread with the four parmameters
+                 */ 
+                
             }
         }
         //This function sends the data to the RTU
-        private void sendJSON(String ipAddress,String indexNumber,String tagName, String value){
+        private void sendJSON(String ipAddress,String indexNumber,String tagName, List<String[]> piDataList){
+            int temp = 0;
 
             while(this.im.isProgramEnabled){
+                String data =
+                    "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
+                    +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
+                    +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
+                //TODO:
+                /*
+                 * Finish constcuting JSON
+                 * Add a wait function that uses the interval time (might need to get from interrupt manager (im)
+                 * update the temp varaible, but make sure it doesn't exceed max list. You may need to check the maximum value
+                 * of said list
+                 * Build a stream writer for all this stuff and then send it through the IP address
+                 * You might want to encapsulate this in a try{} catch{}
+                 * You then need to pass all this shit back to the GUI's textbox
+                 * 
+                 */
+                
+                temp++;
             }
-            String data =
-                "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
-                +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
-                +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
 
         }
 
