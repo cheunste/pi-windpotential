@@ -23,6 +23,10 @@ namespace derp
         private List<String[]> jonesRTUList;
         private List<String[]> juniperRTUList;
 
+        //Time related variables goes here
+        private int piTimeInterval;
+
+        //Constructor
         public rtuSender(){
             //Sets the dictionary that maps Tags to a site
             this.piToDNPDict = new Dictionary<String, String>();
@@ -125,9 +129,20 @@ namespace derp
             siteArray.Add(tempArray);
         }
 
+        private void setPiTimeInterval(int time){
+
+}
+
         //This function sends the data to the RTU
         private void sendToRTU(){
-}
+
+            String derp = "";
+            String data =
+                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": 111111.0, \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
+            InterruptManager im = new InterruptManager();
+
+        }
         
     }
 }

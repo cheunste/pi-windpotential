@@ -132,6 +132,15 @@ namespace derp
             //recompile the array
             
         }
+
+        //method to set the PI Interval (in minute
+        public void setInterval(int minuteInterval){
+            this.interval =TimeSpan(0,minuteInterval,0);
+        }
+        //method to get the interval. 
+        public TimeSpan getInterval(){
+            return this.interval;
+        }
     }
 
 }
