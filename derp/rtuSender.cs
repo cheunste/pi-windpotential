@@ -23,6 +23,8 @@ namespace derp
         private Dictionary<String,String> piToDNPDict;
         private Dictionary<String,int> dnpIndexDict;
         private Dictionary<String,String> ipAddressDict;
+        private Dictionary<String,String> siteDict;
+
         //The rtu List
         private List<String[]> klondikeRTUList;
         private List<String[]> bigHornRTUList;
@@ -58,9 +60,11 @@ namespace derp
             this.piToDNPDict = new Dictionary<String, String>();
             this.dnpIndexDict = new Dictionary<String, int>();
             this.ipAddressDict = new Dictionary<String,String>();
+            this.siteDict = new Dictionary<String,String>();
             setUpPiToDNPDict();
             setUpdnpIndexDict();
             setUpIPAddressDict();
+            setSiteDict();
             this.klondikeRTUList = new List<String[]>();
             this.bigHornRTUList = new List<String[]>();
             this.jonesRTUList = new List<String[]>();
@@ -161,6 +165,22 @@ namespace derp
             this.dnpIndexDict.Add("BIGHO_AGC_AvailablePwr_I",2);
             this.dnpIndexDict.Add("BIGH2_AGC_AvailablePwr_I",14);
             this.dnpIndexDict.Add("JUNCA_AGC_AvailablePwr_I",2);
+        }
+        private void setSiteDict(){
+            this.siteDict.Add("KLON1_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("KLON2_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("KLONA_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("KLONG_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("KLONS_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("KLONM_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("HAYCA_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("STPOI_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("LEJUN_AGC_AvailablePwr_I","JonesCanyon");
+            this.siteDict.Add("LEJU2_AGC_AvailablePwr_I","JonesCanyon");
+            this.siteDict.Add("PESPR_AGC_AvailablePwr_I","JonesCanyon");
+            this.siteDict.Add("BIGHO_AGC_AvailablePwr_I","BigHorn");
+            this.siteDict.Add("BIGH2_AGC_AvailablePwr_I","BigHorn");
+            this.siteDict.Add("JUNCA_AGC_AvailablePwr_I","JuniperCanyon");
         }
 
         private void setUpIPAddressDict(){
@@ -273,9 +293,10 @@ namespace derp
                 //Start threading here
                 String dnpTag = this.piToDNPDict[tempList[0][0]];
                 String ipAddress = this.ipAddressDict[dnpTag];
+                String siteName = this.siteDict[dnpTag];
                 int indexNumber = this.dnpIndexDict[dnpTag];
 
-                Thread t = new Thread(()=>packageData(ipAddress,indexNumber,dnpTag,tempList));
+                Thread t = new Thread(()=>packageData(ipAddress,indexNumber,dnpTag,siteName,tempList));
                 t.Start();
                 /*
                  * TODO:
@@ -285,15 +306,16 @@ namespace derp
             }
         }
         //This function sends the data to the RTU
-        private void packageData(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
+        private void packageData(String ipAddress,int indexNumber,String tagName, String siteName,List<String[]> piDataList){
             int temp = 0;
             while(getState() == true ){
                 String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
-                    +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
+                    +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": "
+                    +siteName+", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
-                callRTU();
+                callRTU(ipAddress,data);
                 //TODO:
                 /*
                  * Finish constcuting JSON
@@ -315,31 +337,45 @@ namespace derp
         }
         private void callRTU(){
             var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
-            httpWebRequestData.Timeout=500;
             httpWebRequestData.ContentType = "application/json";
             httpWebRequestData.Method = "POST";
-                string data =
-                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": 111111.0, \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+            Random rnd = new Random();
+            String randomNumber = rnd.Next(0,20000).ToString();
+            string data =
+                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\":"
+               +randomNumber+ 
+                " , \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
 
-            try{
                 using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
                 {
-                    try{
                         streamWriter.Write(data);
-                    }
-                    catch(Exception e){
-                        Console.WriteLine("Cannot write data: "+data);
-                    }
-                    finally{
                         streamWriter.Flush();
                         streamWriter.Close();
-                    }
-                   
                 }
-            }
-            catch (Exception e){
-                Console.WriteLine("Cannot write data: "+data);
-            }
+                var httpResponseData = (HttpWebResponse)httpWebRequestData.GetResponse();
+                using (var streamReader = new StreamReader(httpResponseData.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Console.WriteLine(result);
+                }
+        }
+        //The overloaded version of the callRTU method
+        private void callRTU(String ipAddress,String data){
+            var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
+            httpWebRequestData.ContentType = "application/json";
+            httpWebRequestData.Method = "POST";
+                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                {
+                        streamWriter.Write(data);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                }
+                var httpResponseData = (HttpWebResponse)httpWebRequestData.GetResponse();
+                using (var streamReader = new StreamReader(httpResponseData.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Console.WriteLine(result);
+                }
         }
     }
 }
