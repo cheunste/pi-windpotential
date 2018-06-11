@@ -48,9 +48,6 @@ namespace derp
         private List<String[]> jc1;
         private List<List<String[]>> masterList;
 
-        //Member variable to the interruptMnaager (reference)
-        private InterruptManager im;
-
         //State
         private Boolean state;
 
@@ -85,7 +82,6 @@ namespace derp
             this.jc1 = new List<String[]>();
             this.masterList = new List<List<String[]>>();
 
-            this.im = new InterruptManager();
         }
 
 
@@ -319,7 +315,7 @@ namespace derp
                 //TODO:
                 /*
                  * Finish constcuting JSON
-                 * Add a wait function that uses the interval time (might need to get from interrupt manager (im)
+                 * Add a wait function that uses the interval time 
                  * update the temp varaible, but make sure it doesn't exceed max list. You may need to check the maximum value
                  * of said list
                  * Build a stream writer for all this stuff and then send it through the IP address
