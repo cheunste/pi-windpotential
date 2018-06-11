@@ -257,7 +257,7 @@ namespace derp
 
                 Console.WriteLine(tempList);
                 //Start threading here
-                var thread = new Thread(compoundJSON);
+                var thread = new Thread(sendJSON);
                 String dnpTag = this.dnpIndexDict[tempList[0][0]];
                 String ipAddress = this.ipAddressDict[dnpTag];
                 int indexNumber = this.dnpIndexDict[dnpTag];

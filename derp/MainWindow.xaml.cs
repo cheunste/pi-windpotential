@@ -22,6 +22,7 @@ namespace derp
     {
         private piGetter pigetter;
         private rtuSender rtusender;
+        private InterruptManager im;
         private String startDateTime;
         private String endDateTime;
 
@@ -34,6 +35,7 @@ namespace derp
             //Initialize the classes
             this.pigetter = new piGetter();
             this.rtusender = new rtuSender();
+            this.im = new InterruptManager();
 
             //What is the current start time
             //initialize parameters here
@@ -72,12 +74,15 @@ namespace derp
             else
             {
                 this.pigetter.isActive(true);
+                this.im.isProgramEnabled(true);
             }
         }
         private void disable(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
             this.pigetter.isActive(false);
+            this.im.isProgramEnabled(false);
+            this.rtusender.deleteAllLists();
         }
 
         private void updateTextbox(object sender, KeyEventArgs e)
