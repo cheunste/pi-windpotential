@@ -25,6 +25,7 @@ namespace derp
         private InterruptManager im;
         private String startDateTime;
         private String endDateTime;
+        private TimeSpan interval;
 
 
         public MainWindow()
@@ -36,7 +37,7 @@ namespace derp
             this.pigetter = new piGetter();
             this.rtusender = new rtuSender();
             this.im = new InterruptManager();
-
+            this.interval = new TimeSpan(0, 5, 0);
             //What is the current start time
             //initialize parameters here
 
@@ -75,7 +76,11 @@ namespace derp
             {
                 this.rtusender.setState(true);
                 this.im.setprogramEnabled(true);
+
+                //Set the sampling interval for PI
+                this.pigetter.setSamplingInterval(this.interval);
                 this.pigetter.isActive(true);
+
                 this.rtusender.setList(pigetter.getList());
                 this.rtusender.sendToRTU();
             }

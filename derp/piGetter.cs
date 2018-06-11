@@ -67,8 +67,8 @@ namespace derp
         private void composeArray()
         {
             this.aFTimeRange = new AFTimeRange(this.startDateTime, this.endDateTime);
-            this.interval = new TimeSpan(0, 5, 0);
-            this.span = new AFTimeSpan(interval);
+            //this.interval = new TimeSpan(0, 5, 0);
+            this.span = new AFTimeSpan(this.interval);
 
             foreach (String windNodeTag in windNodePotentialTags)
             {
@@ -128,9 +128,11 @@ namespace derp
             
         }
 
-        //method to set the PI Interval (in minute
-        public void setInterval(int minuteInterval){
-            //this.interval(0,minuteInterval,0);
+        //method to set the PI Interval (in TimeSpan of minutes)
+        //Seriously, a timespan looks something like 
+        //this.interval = new TimeSpan(0, 5, 0);
+        public void setSamplingInterval(TimeSpan interval){
+            this.interval=interval;
         }
         //method to get the interval. 
         public TimeSpan getInterval(){
