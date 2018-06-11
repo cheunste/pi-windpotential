@@ -81,6 +81,9 @@ namespace derp
                 this.pigetter.setSamplingInterval(this.interval);
                 this.pigetter.isActive(true);
 
+                //Set the wait interval
+                TimeSpan ts = new TimeSpan(0,5,0);
+                this.rtusender.setUpdateInterval(ts);
                 this.rtusender.setList(pigetter.getList());
                 this.rtusender.sendToRTU();
             }
@@ -89,6 +92,7 @@ namespace derp
         {
             Console.WriteLine("program disabled");
             this.rtusender.setState(false);
+            this.rtusender.cancelRTUCalls();
             this.im.setprogramEnabled(false);
             this.pigetter.isActive(false);
             this.rtusender.deleteAllLists();

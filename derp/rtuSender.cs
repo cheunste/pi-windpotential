@@ -55,6 +55,9 @@ namespace derp
         private CancellationTokenSource source;
         private CancellationToken token;
 
+        //update interval
+        private TimeSpan interval;
+
         //Constructor
         public rtuSender(){
             //Sets the dictionary that maps Tags to a site
@@ -91,6 +94,16 @@ namespace derp
             this.token = source.Token;
 
         }
+
+        //This method sets the wait time update interval for the program to push out to the RTU
+        public void setUpdateInterval(TimeSpan interval){
+            this.interval = interval;
+        }
+
+        //get the update time interval for the program
+        public TimeSpan getUpdateInterval(){
+            return this.interval;
+        }                                      
 
         //Method to delete all lists. This is used when you need to call
         public void deleteAllLists(){
@@ -317,7 +330,7 @@ namespace derp
         //This function sends the data to the RTU
         private void packageData(String ipAddress,int indexNumber,String tagName, String siteName,List<String[]> piDataList){
             int temp = 0;
-            while(getState() == true ){
+            while(getState() == true){
                 String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
@@ -325,9 +338,14 @@ namespace derp
                     +siteName+", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
 
-                callRTU(ipAddress,data);
+                //callRTU(ipAddress,data);
+                callRTU();
+
                 //Add the delay here
-                //Task.Delay(source);
+                var cancelled = token.WaitHandle.WaitOne(this.interval);
+                if (cancelled)
+                    break;
+
 
                 //TODO:
                 /*
