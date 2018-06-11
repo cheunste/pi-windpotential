@@ -51,6 +51,10 @@ namespace derp
         //State
         private Boolean state;
 
+        //Cancelation tokens
+        private CancellationTokenSource source;
+        private CancellationToken token;
+
         //Constructor
         public rtuSender(){
             //Sets the dictionary that maps Tags to a site
@@ -82,10 +86,13 @@ namespace derp
             this.jc1 = new List<String[]>();
             this.masterList = new List<List<String[]>>();
 
+            //set up cancellation tokens
+            this.source = new CancellationTokenSource();
+            this.token = source.Token;
+
         }
 
-
-
+        //Method to delete all lists. This is used when you need to call
         public void deleteAllLists(){
             klondikeRTUList.Clear();
             bigHornRTUList.Clear();
@@ -111,6 +118,7 @@ namespace derp
 
         }
 
+        //Build master lists
         private void buildMasterList(){
             this.masterList.Add(kl1);
             this.masterList.Add(kl2);
@@ -126,6 +134,11 @@ namespace derp
             this.masterList.Add(bh1);
             this.masterList.Add(bh2);
             this.masterList.Add(jc1);
+        }
+
+        //This method cancels all ongoing RTU calls
+        public void cancelRTUCalls(){
+            this.source.Cancel();
         }
 
 
@@ -311,7 +324,11 @@ namespace derp
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": "
                     +siteName+", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
                 callRTU(ipAddress,data);
+                //Add the delay here
+                //Task.Delay(source);
+
                 //TODO:
                 /*
                  * Finish constcuting JSON
@@ -328,9 +345,9 @@ namespace derp
                     temp = 0;
                 }
 
-
             }
         }
+        //Function to call RTU
         private void callRTU(){
             var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
             httpWebRequestData.ContentType = "application/json";
@@ -355,6 +372,7 @@ namespace derp
                     Console.WriteLine(result);
                 }
         }
+
         //The overloaded version of the callRTU method
         private void callRTU(String ipAddress,String data){
             var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
