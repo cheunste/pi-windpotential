@@ -87,10 +87,11 @@ namespace derp
                     Console.WriteLine(temp[0]+", "+temp[1]+", "+temp[2]);
                     this.valueList.Add(temp);
                 }
-                this.rtu.setArray(this.valueList);
+                //this.rtu.setArray(this.valueList);
             }
-            this.rtu.sendToRTU();
+            //this.rtu.sendToRTU();
         }
+
 
         public void setStartDateTime(String date) { this.startDateTime = date; }
         public void setEndDateTime (String date) { this.endDateTime = date; }
@@ -102,10 +103,12 @@ namespace derp
             {
                 //Raise inerrupt
                 //Fetch PI Data
+                rtu.setState(true);
                 composeArray();
             }
             else
             {
+                rtu.setState(false);
                 stopArray();
             }
             

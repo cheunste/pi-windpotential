@@ -73,15 +73,18 @@ namespace derp
             }
             else
             {
-                this.pigetter.isActive(true);
+                this.rtusender.setState(true);
                 this.im.setprogramEnabled(true);
+                this.pigetter.isActive(true);
+                rtusender.setList(pigetter.getList);
             }
         }
         private void disable(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
-            this.pigetter.isActive(false);
+            this.rtusender.setState(false);
             this.im.setprogramEnabled(false);
+            this.pigetter.isActive(false);
             this.rtusender.deleteAllLists();
         }
 

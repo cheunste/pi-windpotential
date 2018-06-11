@@ -47,6 +47,9 @@ namespace derp
         //Member variable to the interruptMnaager (reference)
         private InterruptManager im;
 
+        //State
+        private Boolean state;
+
         //Constructor
         public rtuSender(){
             //Sets the dictionary that maps Tags to a site
@@ -188,7 +191,7 @@ namespace derp
         }
 
         //Sets the array passed by the piGetter class to the rtuArrays in this class
-        public void setArray(List<String[]> valueList){
+        public void setList(List<String[]> valueList){
 
             foreach (String[] tempArray in valueList){
                 //At this point, you'll need to split this into different arrays. One for each of the RTUs
@@ -251,6 +254,13 @@ namespace derp
         }
 
 
+        public void setState(Boolean state){
+            this.state = state;
+        }
+
+        public Boolean getState(){
+            return this.state;
+}
         //Function to send to RTU
         public void sendToRTU(){
             buildMasterList();
@@ -274,14 +284,14 @@ namespace derp
         //This function sends the data to the RTU
         private void sendJSON(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
             int temp = 0;
-
-            while(this.im.isProgramEnabled()){
+            //while(this.im.isProgramEnabled() == true ){
+            while(getState() == true ){
                 String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
-
+                Console.WriteLine(data);
                 //TODO:
                 /*
                  * Finish constcuting JSON
@@ -295,11 +305,14 @@ namespace derp
                  */
                 
                 temp++;
-            }
+                if (temp > piDataList.Count){
+                    temp = 0;
+                }
 
 
         }
 
         
     }
+        }
 }
