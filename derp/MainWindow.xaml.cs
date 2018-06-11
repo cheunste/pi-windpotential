@@ -74,14 +74,14 @@ namespace derp
             else
             {
                 this.pigetter.isActive(true);
-                this.im.isProgramEnabled(true);
+                this.im.setprogramEnabled(true);
             }
         }
         private void disable(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
             this.pigetter.isActive(false);
-            this.im.isProgramEnabled(false);
+            this.im.setprogramEnabled(false);
             this.rtusender.deleteAllLists();
         }
 

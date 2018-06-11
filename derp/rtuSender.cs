@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Thread;
+using System.Threading;
+
 
 namespace derp
 {
@@ -81,27 +82,27 @@ namespace derp
 
 
         public void deleteAllLists(){
-            klondikeRTUList.RemoveAll();
-            bigHornRTUList.RemoveAll();
-            jonesRTUList.RemoveAll();
-            juniperRTUList.RemoveAll();
+            klondikeRTUList.Clear();
+            bigHornRTUList.Clear();
+            jonesRTUList.Clear();
+            juniperRTUList.Clear();
 
             //the site Lists
-            kl1.RemoveAll();
-            kl2.RemoveAll();
-            k3A.RemoveAll();
-            k3GE.RemoveAll();
-            k3S.RemoveAll();
-            k3mhi.RemoveAll();
-            hc1.RemoveAll();
-            sp1.RemoveAll();
-            lj2a.RemoveAll();
-            lj2b.RemoveAll();
-            ps1.RemoveAll();
-            bh1.RemoveAll();
-            bh2.RemoveAll();
-            jc1.RemoveAll();
-            masterList.RemoveAll();
+            kl1.Clear();
+            kl2.Clear();
+            k3A.Clear();
+            k3GE.Clear();
+            k3S.Clear();
+            k3mhi.Clear();
+            hc1.Clear();
+            sp1.Clear();
+            lj2a.Clear();
+            lj2b.Clear();
+            ps1.Clear();
+            bh1.Clear();
+            bh2.Clear();
+            jc1.Clear();
+            masterList.Clear();
 
         }
 
@@ -157,7 +158,7 @@ namespace derp
             this.dnpIndexDict.Add("JUNCA_AGC_AvailablePwr_I",2);
         }
 
-        private void isetUpIPAddressDict(){
+        private void setUpIPAddressDict(){
             this.ipAddressDict.Add("KLON1_AGC_AvailablePwr_I","10.41.58.124");
             this.ipAddressDict.Add("KLON2_AGC_AvailablePwr_I","10.41.58.124");
             this.ipAddressDict.Add("KLONA_AGC_AvailablePwr_I","10.41.58.124");
@@ -257,11 +258,12 @@ namespace derp
 
                 Console.WriteLine(tempList);
                 //Start threading here
-                var thread = new Thread(sendJSON);
-                String dnpTag = this.dnpIndexDict[tempList[0][0]];
+                String dnpTag = this.piToDNPDict[tempList[0][0]];
                 String ipAddress = this.ipAddressDict[dnpTag];
                 int indexNumber = this.dnpIndexDict[dnpTag];
-                //thread.Start(ipAddress,indexNumber,dnpTag,value);
+
+                Thread t = new Thread(()=>sendJSON(ipAddress,indexNumber,dnpTag,tempList));
+                t.Start();
                 /*
                  * TODO:
                  * - Start thread with the four parmameters
@@ -270,10 +272,11 @@ namespace derp
             }
         }
         //This function sends the data to the RTU
-        private void sendJSON(String ipAddress,String indexNumber,String tagName, List<String[]> piDataList){
+        private void sendJSON(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
             int temp = 0;
 
-            while(this.im.isProgramEnabled){
+            while(this.im.isProgramEnabled()){
+                String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
