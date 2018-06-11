@@ -76,7 +76,8 @@ namespace derp
                 this.rtusender.setState(true);
                 this.im.setprogramEnabled(true);
                 this.pigetter.isActive(true);
-                rtusender.setList(pigetter.getList);
+                this.rtusender.setList(pigetter.getList());
+                this.rtusender.sendToRTU();
             }
         }
         private void disable(object sender, RoutedEventArgs e)

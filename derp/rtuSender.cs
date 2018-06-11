@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.IO;
+using System.Net;
 
 
 namespace derp
@@ -190,6 +192,7 @@ namespace derp
             return this.rtuUpdateTime;
         }
 
+
         //Sets the array passed by the piGetter class to the rtuArrays in this class
         public void setList(List<String[]> valueList){
 
@@ -272,7 +275,7 @@ namespace derp
                 String ipAddress = this.ipAddressDict[dnpTag];
                 int indexNumber = this.dnpIndexDict[dnpTag];
 
-                Thread t = new Thread(()=>sendJSON(ipAddress,indexNumber,dnpTag,tempList));
+                Thread t = new Thread(()=>packageData(ipAddress,indexNumber,dnpTag,tempList));
                 t.Start();
                 /*
                  * TODO:
@@ -282,7 +285,7 @@ namespace derp
             }
         }
         //This function sends the data to the RTU
-        private void sendJSON(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
+        private void packageData(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
             int temp = 0;
             //while(this.im.isProgramEnabled() == true ){
             while(getState() == true ){
@@ -291,7 +294,22 @@ namespace derp
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
-                Console.WriteLine(data);
+
+                var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
+                httpWebRequestData.ContentType = "application/json";
+                httpWebRequestData.Method = "POST";
+                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                {
+                    try{
+                        streamWriter.Write(data);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    catch(Exception e){
+                        Console.WriteLine(e);
+                    }
+                   
+                }
                 //TODO:
                 /*
                  * Finish constcuting JSON
@@ -310,9 +328,7 @@ namespace derp
                 }
 
 
+            }
         }
-
-        
     }
-        }
 }

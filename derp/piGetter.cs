@@ -27,7 +27,6 @@ namespace derp
         private String endDateTime;
         private PIServers pIServers;
         private PIServer piServer;
-        private rtuSender rtu;
         //This is the array of all the potential tags in the Gorge 
         private String[] windNodePotentialTags =
         {
@@ -55,7 +54,6 @@ namespace derp
 
             this.valueList = new List<String[]>();
 
-            this.rtu = new rtuSender();
         }
 
 
@@ -103,12 +101,10 @@ namespace derp
             {
                 //Raise inerrupt
                 //Fetch PI Data
-                rtu.setState(true);
                 composeArray();
             }
             else
             {
-                rtu.setState(false);
                 stopArray();
             }
             
