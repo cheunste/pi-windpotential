@@ -300,7 +300,7 @@ namespace derp
                 t.Start();
                 /*
                  * TODO:
-                 * - Start thread with the four parmameters
+                 * - Start thread with the six parmameters
                  */ 
                 
             }
