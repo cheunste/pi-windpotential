@@ -287,29 +287,13 @@ namespace derp
         //This function sends the data to the RTU
         private void packageData(String ipAddress,int indexNumber,String tagName, List<String[]> piDataList){
             int temp = 0;
-            //while(this.im.isProgramEnabled() == true ){
             while(getState() == true ){
                 String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
-
-                var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
-                httpWebRequestData.ContentType = "application/json";
-                httpWebRequestData.Method = "POST";
-                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
-                {
-                    try{
-                        streamWriter.Write(data);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                    }
-                    catch(Exception e){
-                        Console.WriteLine(e);
-                    }
-                   
-                }
+                callRTU();
                 //TODO:
                 /*
                  * Finish constcuting JSON
@@ -321,13 +305,40 @@ namespace derp
                  * You then need to pass all this shit back to the GUI's textbox
                  * 
                  */
-                
                 temp++;
                 if (temp > piDataList.Count){
                     temp = 0;
                 }
 
 
+            }
+        }
+        private void callRTU(){
+            var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
+            httpWebRequestData.Timeout=500;
+            httpWebRequestData.ContentType = "application/json";
+            httpWebRequestData.Method = "POST";
+                string data =
+                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\": 111111.0, \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
+
+            try{
+                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                {
+                    try{
+                        streamWriter.Write(data);
+                    }
+                    catch(Exception e){
+                        Console.WriteLine("Cannot write data: "+data);
+                    }
+                    finally{
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                   
+                }
+            }
+            catch (Exception e){
+                Console.WriteLine("Cannot write data: "+data);
             }
         }
     }
