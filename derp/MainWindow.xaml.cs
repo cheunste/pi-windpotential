@@ -37,6 +37,8 @@ namespace derp
             this.pigetter = new piGetter();
             this.rtusender = new rtuSender();
             this.im = new InterruptManager();
+
+            //Replace this with the value retrieved from the Sampling Time textbox
             this.interval = new TimeSpan(0, 5, 0);
             //What is the current start time
             //initialize parameters here
@@ -82,6 +84,7 @@ namespace derp
                 this.pigetter.isActive(true);
 
                 //Set the wait interval
+                //TODO, replace ts with the shit in the samplingTimeTextBox
                 TimeSpan ts = new TimeSpan(0,5,0);
                 this.rtusender.setUpdateInterval(ts);
                 this.rtusender.setList(pigetter.getList());
@@ -98,7 +101,7 @@ namespace derp
             this.rtusender.deleteAllLists();
         }
 
-        private void updateTextbox(object sender, KeyEventArgs e)
+        private void updateTimeTextBox(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return || e.Key==Key.Escape || e.Key == Key.Tab)
             {
@@ -107,11 +110,31 @@ namespace derp
 
         }
 
-        private void updateTextbox(object sender, RoutedEventArgs e)
+        private void updateTimeTextBox(object sender, RoutedEventArgs e)
         {
             rtusender.setUpdateTime(getUpdateTime());
         }
 
+        private void samplingTimeTextBox(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key==Key.Escape || e.Key == Key.Tab)
+            {
+                this.interval = new TimeSpan(0, getSamplingTime(), 0);
+            }
+        }
+
+        private void samplingTimeTextBox(object sender, RoutedEventArgs e)
+        {
+                this.interval = new TimeSpan(0,getSamplingTime(),0);
+        }
+
+        private int getSamplingTime()
+        {
+            TextBox t= (TextBox)samplingTextbox;
+            String samplingTextboxValue = t.Text;
+            Console.WriteLine("On Change detected: " +samplingTextboxValue);
+            return (int.Parse(samplingTextboxValue));
+        }
         private int getUpdateTime()
         {
             TextBox t= (TextBox)rtuUpdateTextbox;
@@ -140,5 +163,7 @@ namespace derp
         {
 
         }
+
+        
     }
 }
