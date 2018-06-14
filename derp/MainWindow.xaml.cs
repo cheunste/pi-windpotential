@@ -37,6 +37,8 @@ namespace derp
             this.pigetter = new piGetter();
             this.rtusender = new rtuSender();
             this.im = new InterruptManager();
+
+            //Replace this with the value retrieved from the Sampling Time textbox
             this.interval = new TimeSpan(0, 5, 0);
             //What is the current start time
             //initialize parameters here
@@ -58,7 +60,7 @@ namespace derp
             //var rtuTask = Task.Run(() => this.rtusender);
         }
 
-        private void enable(object sender, RoutedEventArgs e)
+        private void enableState(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program enabled");
             Console.WriteLine("Start Time: "+this.startDateTime);
@@ -74,23 +76,38 @@ namespace derp
             }
             else
             {
-                this.rtusender.setState(true);
-                this.im.setprogramEnabled(true);
-
-                //Set the sampling interval for PI
-                this.pigetter.setSamplingInterval(this.interval);
-                this.pigetter.isActive(true);
-
-                //Set the wait interval
-                TimeSpan ts = new TimeSpan(0,5,0);
-                this.rtusender.setUpdateInterval(ts);
-                this.rtusender.setList(pigetter.getList());
-                this.rtusender.sendToRTU();
+                enable();
+            
             }
         }
-        private void disable(object sender, RoutedEventArgs e)
+        private void disableState(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
+            disable();
+
+        }
+
+        private void enable()
+        {
+            this.rtusender.setState(true);
+            this.im.setprogramEnabled(true);
+            //Set the wait interval
+            TimeSpan samplingTime = new TimeSpan(0,getSamplingTime(),0);
+            //This is update time
+            TimeSpan updateTime = new TimeSpan(0, getUpdateTime(), 0);
+
+            this.interval = new TimeSpan(0, getSamplingTime(), 0);
+            //Set the sampling interval for PI
+            this.pigetter.setSamplingInterval(this.interval);
+            this.pigetter.isActive(true);
+
+            this.rtusender.setUpdateInterval(updateTime);
+            this.rtusender.setList(pigetter.getList());
+            this.rtusender.sendToRTU();
+        }
+
+        private void disable()
+        {
             this.rtusender.setState(false);
             this.rtusender.cancelRTUCalls();
             this.im.setprogramEnabled(false);
@@ -98,7 +115,17 @@ namespace derp
             this.rtusender.deleteAllLists();
         }
 
-        private void updateTextbox(object sender, KeyEventArgs e)
+
+        //Method to restart everything, meaning refetch the data from PI, rebuild the List, etc
+        private void restart()
+        {
+            //First disable everything...but without triggerting the switch
+            disable();
+            enable();
+
+        }
+
+        private void updateTimeTextBox(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return || e.Key==Key.Escape || e.Key == Key.Tab)
             {
@@ -107,11 +134,32 @@ namespace derp
 
         }
 
-        private void updateTextbox(object sender, RoutedEventArgs e)
+        private void updateTimeTextBox(object sender, RoutedEventArgs e)
         {
             rtusender.setUpdateTime(getUpdateTime());
         }
 
+        private void samplingTimeTextBox(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key==Key.Escape || e.Key == Key.Tab)
+            {
+                this.interval = new TimeSpan(0, getSamplingTime(), 0);
+            }
+        }
+
+        private void samplingTimeTextBox(object sender, RoutedEventArgs e)
+        {
+                this.interval = new TimeSpan(0,getSamplingTime(),0);
+        }
+
+        private int getSamplingTime()
+        {
+            TextBox t= (TextBox)samplingTextbox;
+            String samplingTextboxValue = t.Text;
+            Console.WriteLine("On Change detected: " +samplingTextboxValue);
+            return int.Parse(samplingTextboxValue);
+           
+        }
         private int getUpdateTime()
         {
             TextBox t= (TextBox)rtuUpdateTextbox;
@@ -125,20 +173,28 @@ namespace derp
             return sender.ToString();
 
         }
+        
+        //Event method 
         private void startDateListener(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             pigetter.setStartDateTime(getDateTime(e.NewValue));
             pigetter.restart();
+            restart();
         }
         private void endDateListener(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             pigetter.setEndDateTime(getDateTime(e.NewValue));
             pigetter.restart();
+            restart();
         }
+
+
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
+
+
     }
 }
