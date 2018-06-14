@@ -88,7 +88,7 @@ namespace derp
             {
 
             }
-            else
+            else if (enableButton.IsChecked == true)
             {
                 this.rtusender.setState(true);
                 this.im.setprogramEnabled(true);
@@ -105,6 +105,11 @@ namespace derp
                 this.rtusender.setUpdateInterval(updateTime);
                 this.rtusender.setList(pigetter.getList());
                 this.rtusender.sendToRTU();           
+            }
+            else
+            {
+                //Doesn't really do anything
+
             }
 
         }

@@ -59,6 +59,7 @@
         <StackPanel Orientation="Horizontal" Margin="10,189,0,331" HorizontalAlignment="Left" Width="150">
             <Label x:Name="EnabledLabel" Content="Enable:" HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="16"/>
             <ToggleButton
+                  x:Name="enableButton"
                   Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
                   ToolTip="MaterialDesignSwitchDarkToggleButton"
                   IsChecked="False" Width="88" Checked="enableState"
