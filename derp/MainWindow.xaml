@@ -61,8 +61,8 @@
             <ToggleButton
                   Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
                   ToolTip="MaterialDesignSwitchDarkToggleButton"
-                  IsChecked="False" Width="88" Checked="enable"
-                  Unchecked="disable"
+                  IsChecked="False" Width="88" Checked="enableState"
+                  Unchecked="disableState"
                 />
             <Label x:Name="ErrorLabel"
                     HorizontalAlignment="Left"
