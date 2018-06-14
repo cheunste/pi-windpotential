@@ -65,6 +65,20 @@ namespace derp
             Console.WriteLine("program enabled");
             Console.WriteLine("Start Time: "+this.startDateTime);
             Console.WriteLine("End Time: "+this.endDateTime);
+
+            enable();
+
+        }
+        private void disableState(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("program disabled");
+            disable();
+
+        }
+
+        private void enable()
+        {
+
             //Check if startDateTime or EndDateTime is empty or not. If it is empty, then throw an error to the user
             if (this.startDateTime.Equals("") || this.endDateTime == null )
             { 
@@ -76,34 +90,23 @@ namespace derp
             }
             else
             {
-                enable();
-            
+                this.rtusender.setState(true);
+                this.im.setprogramEnabled(true);
+                //Set the wait interval
+                TimeSpan samplingTime = new TimeSpan(0,getSamplingTime(),0);
+                //This is update time
+                TimeSpan updateTime = new TimeSpan(0, getUpdateTime(), 0);
+
+                this.interval = new TimeSpan(0, getSamplingTime(), 0);
+                //Set the sampling interval for PI
+                this.pigetter.setSamplingInterval(this.interval);
+                this.pigetter.isActive(true);
+
+                this.rtusender.setUpdateInterval(updateTime);
+                this.rtusender.setList(pigetter.getList());
+                this.rtusender.sendToRTU();           
             }
-        }
-        private void disableState(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("program disabled");
-            disable();
 
-        }
-
-        private void enable()
-        {
-            this.rtusender.setState(true);
-            this.im.setprogramEnabled(true);
-            //Set the wait interval
-            TimeSpan samplingTime = new TimeSpan(0,getSamplingTime(),0);
-            //This is update time
-            TimeSpan updateTime = new TimeSpan(0, getUpdateTime(), 0);
-
-            this.interval = new TimeSpan(0, getSamplingTime(), 0);
-            //Set the sampling interval for PI
-            this.pigetter.setSamplingInterval(this.interval);
-            this.pigetter.isActive(true);
-
-            this.rtusender.setUpdateInterval(updateTime);
-            this.rtusender.setList(pigetter.getList());
-            this.rtusender.sendToRTU();
         }
 
         private void disable()
