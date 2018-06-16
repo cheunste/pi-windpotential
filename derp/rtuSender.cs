@@ -396,21 +396,27 @@ namespace derp
 
         //The overloaded version of the callRTU method
         private void callRTU(String ipAddress,String data){
-            var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
-            httpWebRequestData.ContentType = "application/json";
-            httpWebRequestData.Method = "POST";
-                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
-                {
-                        streamWriter.Write(data);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                }
-                var httpResponseData = (HttpWebResponse)httpWebRequestData.GetResponse();
-                using (var streamReader = new StreamReader(httpResponseData.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    Console.WriteLine(result);
-                }
+            try{
+                var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
+                httpWebRequestData.ContentType = "application/json";
+                httpWebRequestData.Method = "POST";
+                    using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                    {
+                            streamWriter.Write(data);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                    }
+                    var httpResponseData = (HttpWebResponse)httpWebRequestData.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponseData.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        Console.WriteLine(result);
+                    }
+            }
+            catch(Exception e){
+                throw e;
+
+            }
         }
     }
 }
