@@ -25,8 +25,7 @@ namespace derp
         private InterruptManager im;
         private String startDateTime;
         private String endDateTime;
-        private TimeSpan interval;
-
+        private TimeSpan samplingInterval;
 
         public MainWindow()
         {
@@ -39,18 +38,20 @@ namespace derp
             this.im = new InterruptManager();
 
             //Replace this with the value retrieved from the Sampling Time textbox
-            this.interval = new TimeSpan(0, 5, 0);
+            this.samplingInterval = new TimeSpan(0, 5, 0);
             //What is the current start time
             //initialize parameters here
 
             DateTime defaultStart = DateTime.Now.AddHours(-1.00) ;
             DateTime defaultEnd = DateTime.Now;
 
+            this.startDateTime = defaultStart.ToString();
+            this.endDateTime = defaultEnd.ToString();
+
             StartTimePicker.DefaultValue = defaultStart;
             EndTimePicker.DefaultValue = defaultEnd;
 
-            this.startDateTime = defaultStart.ToString();
-            this.endDateTime = defaultEnd.ToString();
+
 
             pigetter.setStartDateTime(defaultStart.ToString());
             pigetter.setEndDateTime(defaultEnd.ToString());
@@ -65,7 +66,24 @@ namespace derp
             Console.WriteLine("program enabled");
             Console.WriteLine("Start Time: "+this.startDateTime);
             Console.WriteLine("End Time: "+this.endDateTime);
-            //Check if startDateTime or EndDateTime is empty or not. If it is empty, then throw an error to the user
+
+            this.rtusender.setState(true);
+            enable();
+
+        }
+        private void disableState(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("program disabled");
+            this.rtusender.setState(false);
+            this.rtusender.cancelRTUCalls();
+            disable();
+
+        }
+
+        private void enable()
+        {
+
+            //Check if startDateTime or EndDateTime is empty or not. If it is empty, then throw an error to the user...or just not run
             if (this.startDateTime.Equals("") || this.endDateTime == null )
             { 
 
@@ -74,42 +92,33 @@ namespace derp
             {
 
             }
+            else if (enableButton.IsChecked == true)
+            {
+                this.im.setprogramEnabled(true);
+                //Set the wait interval
+                TimeSpan samplingTime = getSamplingTime();
+                //This is update time
+                TimeSpan updateTime = getUpdateTime();
+
+                this.samplingInterval = getSamplingTime(); 
+                //Set the sampling interval for PI
+                this.pigetter.setSamplingInterval(this.samplingInterval);
+                this.pigetter.isActive(true);
+
+                this.rtusender.setUpdateInterval(updateTime);
+                this.rtusender.setList(pigetter.getList());
+                this.rtusender.sendToRTU();           
+            }
             else
             {
-                enable();
-            
+                //Doesn't really do anything
+
             }
-        }
-        private void disableState(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("program disabled");
-            disable();
 
-        }
-
-        private void enable()
-        {
-            this.rtusender.setState(true);
-            this.im.setprogramEnabled(true);
-            //Set the wait interval
-            TimeSpan samplingTime = new TimeSpan(0,getSamplingTime(),0);
-            //This is update time
-            TimeSpan updateTime = new TimeSpan(0, getUpdateTime(), 0);
-
-            this.interval = new TimeSpan(0, getSamplingTime(), 0);
-            //Set the sampling interval for PI
-            this.pigetter.setSamplingInterval(this.interval);
-            this.pigetter.isActive(true);
-
-            this.rtusender.setUpdateInterval(updateTime);
-            this.rtusender.setList(pigetter.getList());
-            this.rtusender.sendToRTU();
         }
 
         private void disable()
         {
-            this.rtusender.setState(false);
-            this.rtusender.cancelRTUCalls();
             this.im.setprogramEnabled(false);
             this.pigetter.isActive(false);
             this.rtusender.deleteAllLists();
@@ -143,30 +152,42 @@ namespace derp
         {
             if (e.Key == Key.Return || e.Key==Key.Escape || e.Key == Key.Tab)
             {
-                this.interval = new TimeSpan(0, getSamplingTime(), 0);
+                this.samplingInterval = getSamplingTime();
             }
         }
 
         private void samplingTimeTextBox(object sender, RoutedEventArgs e)
         {
-                this.interval = new TimeSpan(0,getSamplingTime(),0);
+                this.samplingInterval = getSamplingTime();
         }
 
-        private int getSamplingTime()
+        private TimeSpan getSamplingTime()
         {
             TextBox t= (TextBox)samplingTextbox;
             String samplingTextboxValue = t.Text;
             Console.WriteLine("On Change detected: " +samplingTextboxValue);
-            return int.Parse(samplingTextboxValue);
+            double samplingTime = checkNegative(double.Parse(samplingTextboxValue));
+            TimeSpan samplingTimeSpan = TimeSpan.FromMinutes(samplingTime);
+
+            return  samplingTimeSpan;
+
            
         }
-        private int getUpdateTime()
+        private TimeSpan getUpdateTime()
         {
             TextBox t= (TextBox)rtuUpdateTextbox;
             String updateTextboxValue = t.Text;
             Console.WriteLine("On Change detected: " +updateTextboxValue);
-            return (int.Parse(updateTextboxValue));
+            double updateTime = checkNegative(double.Parse(updateTextboxValue));
+
+            TimeSpan updateTimeSpan = TimeSpan.FromMinutes(updateTime);
+            return updateTimeSpan;
         }
+
+        //Method to check if the time is negative. Returns a 1 if it is and the value itself if not
+        private double checkNegative(double time){
+            return (time < 0.00)? 1.00 : time;
+}
 
         private String getDateTime(object sender)
         {

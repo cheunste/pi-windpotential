@@ -39,7 +39,7 @@ namespace derp
         //This is the list of values that is fetched from PI
         private List<String[]> valueList;
         private AFTimeRange aFTimeRange;
-        private TimeSpan interval;
+        private TimeSpan samplingInterval;
         private AFTimeSpan span;
 
         //Constructor
@@ -68,7 +68,7 @@ namespace derp
         {
             this.aFTimeRange = new AFTimeRange(this.startDateTime, this.endDateTime);
             //this.interval = new TimeSpan(0, 5, 0);
-            this.span = new AFTimeSpan(this.interval);
+            this.span = new AFTimeSpan(this.samplingInterval);
 
             foreach (String windNodeTag in windNodePotentialTags)
             {
@@ -130,13 +130,13 @@ namespace derp
 
         //method to set the PI Interval (in TimeSpan of minutes)
         //Seriously, a timespan looks something like 
-        //this.interval = new TimeSpan(0, 5, 0);
-        public void setSamplingInterval(TimeSpan interval){
-            this.interval=interval;
+        //this.samplingInterval = new TimeSpan(0, 5, 0);
+        public void setSamplingInterval(TimeSpan samplingInterval){
+            this.samplingInterval=samplingInterval;
         }
         //method to get the interval. 
         public TimeSpan getInterval(){
-            return this.interval;
+            return this.samplingInterval;
         }
     }
 
