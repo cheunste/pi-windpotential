@@ -18,8 +18,7 @@ namespace derp
 
     class rtuSender
     {
-        private int rtuUpdateTime;
-        private List<String[]> valueList;
+        private TimeSpan rtuUpdateTime;
         private Dictionary<String,String> piToDNPDict;
         private Dictionary<String,int> dnpIndexDict;
         private Dictionary<String,String> ipAddressDict;
@@ -224,14 +223,13 @@ namespace derp
             this.ipAddressDict.Add("JUNCA_AGC_AvailablePwr_I","172.21.1.19");
         }
         //Setter funtion to set the RTU update time, in seconds
-        public void setUpdateTime(int time)
+        public void setUpdateTime(TimeSpan time)
         {
             this.rtuUpdateTime = time;
-
         }
 
         //Getter funtion to set the RTU update time, in seconds
-        public int getUpdateTime(int time)
+        public TimeSpan getUpdateTime(TimeSpan time)
         {
             return this.rtuUpdateTime;
         }
