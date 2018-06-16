@@ -55,8 +55,8 @@ namespace derp
         private CancellationTokenSource source;
         private CancellationToken token;
 
-        //update interval
-        private TimeSpan interval;
+        //update updateInterval
+        private TimeSpan updateInterval;
 
         //Constructor
         public rtuSender(){
@@ -90,20 +90,23 @@ namespace derp
             this.masterList = new List<List<String[]>>();
 
             //set up cancellation tokens
-            this.source = new CancellationTokenSource();
-            this.token = source.Token;
-
+            recreateToken();
         }
 
         //This method sets the wait time update interval for the program to push out to the RTU
-        public void setUpdateInterval(TimeSpan interval){
-            this.interval = interval;
+        public void setUpdateInterval(TimeSpan updateInterval){
+            this.updateInterval = updateInterval;
         }
 
         //get the update time interval for the program
         public TimeSpan getUpdateInterval(){
-            return this.interval;
+            return this.updateInterval;
         }                                      
+
+        private void  recreateToken(){
+            this.source = new CancellationTokenSource();
+            this.token= source.Token;
+        }
 
         //Method to delete all lists. This is used when you need to call
         public void deleteAllLists(){
@@ -153,7 +156,6 @@ namespace derp
         public void cancelRTUCalls(){
             this.source.Cancel();
         }
-
 
         private void setUpPiToDNPDict(){
             this.piToDNPDict.Add("KL1.WF.WPot.CORE","KLON1_AGC_AvailablePwr_I");
@@ -305,7 +307,7 @@ namespace derp
 
         public Boolean getState(){
             return this.state;
-}
+        }
         //Function to send to RTU
         public void sendToRTU(){
             buildMasterList();
@@ -330,7 +332,7 @@ namespace derp
         //This function sends the data to the RTU
         private void packageData(String ipAddress,int indexNumber,String tagName, String siteName,List<String[]> piDataList){
             int temp = 0;
-            while(getState() == true){
+            while(this.state== true){
                 String value =piDataList.ElementAt(0)[1];
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
@@ -342,15 +344,18 @@ namespace derp
                 callRTU();
 
                 //Add the delay here
-                var cancelled = token.WaitHandle.WaitOne(this.interval);
-                if (cancelled)
+                //Wait one time interval. Only escape this if there is an interrupt (Change in either timestamps, update/sampling time or toggle button state)
+                var cancelled = this.token.WaitHandle.WaitOne(this.updateInterval.Add(new TimeSpan(0,0,10)));
+                if (cancelled && this.state ==false ){
+                    Console.WriteLine("Cancelled");
+                    recreateToken();
                     break;
-
+                }
 
                 //TODO:
                 /*
                  * Finish constcuting JSON
-                 * Add a wait function that uses the interval time 
+                 * Add a wait function that uses the update interval time 
                  * update the temp varaible, but make sure it doesn't exceed max list. You may need to check the maximum value
                  * of said list
                  * Build a stream writer for all this stuff and then send it through the IP address
@@ -373,7 +378,7 @@ namespace derp
             Random rnd = new Random();
             String randomNumber = rnd.Next(0,20000).ToString();
             string data =
-                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_RampUp_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\":"
+                "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_AvailablePwr_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\":"
                +randomNumber+ 
                 " , \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
 

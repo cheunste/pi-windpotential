@@ -46,11 +46,13 @@ namespace derp
             DateTime defaultStart = DateTime.Now.AddHours(-1.00) ;
             DateTime defaultEnd = DateTime.Now;
 
+            this.startDateTime = defaultStart.ToString();
+            this.endDateTime = defaultEnd.ToString();
+
             StartTimePicker.DefaultValue = defaultStart;
             EndTimePicker.DefaultValue = defaultEnd;
 
-            this.startDateTime = defaultStart.ToString();
-            this.endDateTime = defaultEnd.ToString();
+
 
             pigetter.setStartDateTime(defaultStart.ToString());
             pigetter.setEndDateTime(defaultEnd.ToString());
@@ -66,12 +68,15 @@ namespace derp
             Console.WriteLine("Start Time: "+this.startDateTime);
             Console.WriteLine("End Time: "+this.endDateTime);
 
+            this.rtusender.setState(true);
             enable();
 
         }
         private void disableState(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
+            this.rtusender.setState(false);
+            this.rtusender.cancelRTUCalls();
             disable();
 
         }
@@ -90,7 +95,6 @@ namespace derp
             }
             else if (enableButton.IsChecked == true)
             {
-                this.rtusender.setState(true);
                 this.im.setprogramEnabled(true);
                 //Set the wait interval
                 TimeSpan samplingTime = new TimeSpan(0,getSamplingTime(),0);
@@ -116,8 +120,6 @@ namespace derp
 
         private void disable()
         {
-            this.rtusender.setState(false);
-            this.rtusender.cancelRTUCalls();
             this.im.setprogramEnabled(false);
             this.pigetter.isActive(false);
             this.rtusender.deleteAllLists();
