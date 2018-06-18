@@ -14,7 +14,9 @@ namespace piWindPotential
 
         public void createFile(List<List<String[]>> masterList)
         {
-            FileStream fs = new FileStream("meh.csv", FileMode.Create);
+            String fileName = "piTrend.csv";
+            FileStream fs = new FileStream(fileName, FileMode.Create);
+            this.fileName = fileName;
             StreamWriter sw = new StreamWriter(fs);
             String line = "";
 
@@ -57,8 +59,7 @@ namespace piWindPotential
 
         public void openFile()
         {
-            Process.Start("notepad.exe", getFileName());
-
+            //ProcessStartInfo info = new ProcessStartInfo(@"C:\Program Files (x86)\Notepad++\notepad++.exe", getFileName());
         }
     }
 }

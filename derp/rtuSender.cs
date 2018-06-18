@@ -317,6 +317,7 @@ namespace piWindPotential
             //write to csv file here
             csvOuptut csvoutput = new csvOuptut();
             csvoutput.createFile(this.masterList);
+            csvoutput.openFile();
             foreach(List<String[]> tempList in this.masterList){
 
                 Console.WriteLine(tempList);
