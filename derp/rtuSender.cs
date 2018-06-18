@@ -9,7 +9,7 @@ using System.Net;
 using System.Web.Script.Serialization;
 
 
-namespace derp
+namespace piWindPotential
 {
 
     /*
@@ -314,6 +314,9 @@ namespace derp
         //Function to send to RTU
         public void sendToRTU(){
             buildMasterList();
+            //write to csv file here
+            csvOuptut csvoutput = new csvOuptut();
+            csvoutput.createFile(this.masterList);
             foreach(List<String[]> tempList in this.masterList){
 
                 Console.WriteLine(tempList);
@@ -336,6 +339,7 @@ namespace derp
         //This function sends the data to the RTU
         private void packageData(String ipAddress,int indexNumber,String tagName, String siteName,List<String[]> piDataList){
             int temp = 0;
+
             while(this.state== true){
                 String value = (double.Parse(piDataList.ElementAt(temp)[1]) * 1000).ToString("0.00");
                 String data =

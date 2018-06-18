@@ -7,7 +7,7 @@
     <ProjectGuid>{A2ABD06F-A956-46A3-8BE8-58FE70158021}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>derp</RootNamespace>
+    <RootNamespace>piWindPotential</RootNamespace>
     <AssemblyName>PI-WindPotential</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -115,6 +115,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="csvOuptut.cs" />
     <Compile Include="InterruptManager.cs" />
     <Compile Include="PickersViewModel.cs" />
     <Compile Include="rtuSender.cs" />

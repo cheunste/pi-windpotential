@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace derp
+namespace piWindPotential
 {
     /*
      * This class is resposible for managing interrupt throughout the entire program

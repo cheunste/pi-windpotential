@@ -9,7 +9,7 @@ using OSIsoft.AF.PI;
 using OSIsoft.AF.Time;
 
 
-namespace derp
+namespace piWindPotential
 {
     /*
     This class is responsible for fetching data from PI
@@ -126,6 +126,12 @@ namespace derp
             //update the time methods
             //recompile the array
             
+        }
+        
+        //This function clears the entire valueList.
+        public void clearList()
+        {
+            this.valueList.Clear();
         }
 
         //method to set the PI Interval (in TimeSpan of minutes)

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MaterialDesignThemes.Wpf;
-namespace derp
+namespace piWindPotential
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -122,6 +122,7 @@ namespace derp
         {
             this.im.setprogramEnabled(false);
             this.pigetter.isActive(false);
+            this.pigetter.clearList();
             this.rtusender.deleteAllLists();
         }
 
