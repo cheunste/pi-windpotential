@@ -23,9 +23,13 @@ namespace derp
         private piGetter pigetter;
         private rtuSender rtusender;
         private InterruptManager im;
-        private String startDateTime;
-        private String endDateTime;
+        private DateTime startDateTime;
+        private DateTime endDateTime;
         private TimeSpan samplingInterval;
+        private List<String> bigHornOutput;
+        private List<String> jonesOutput;
+        private List<String> juniperOutput;
+        private List<String> klondikeOutput;
 
         public MainWindow()
         {
@@ -42,19 +46,16 @@ namespace derp
             //What is the current start time
             //initialize parameters here
 
-            DateTime defaultStart = DateTime.Now.AddHours(-1.00) ;
-            DateTime defaultEnd = DateTime.Now;
+            this.startDateTime = DateTime.Now.AddHours(-1.00) ;
+            this.endDateTime = DateTime.Now;
 
-            this.startDateTime = defaultStart.ToString();
-            this.endDateTime = defaultEnd.ToString();
-
-            StartTimePicker.DefaultValue = defaultStart;
-            EndTimePicker.DefaultValue = defaultEnd;
+            StartTimePicker.DefaultValue = this.startDateTime;
+            EndTimePicker.DefaultValue = this.endDateTime;
 
 
 
-            pigetter.setStartDateTime(defaultStart.ToString());
-            pigetter.setEndDateTime(defaultEnd.ToString());
+            pigetter.setStartDateTime(this.startDateTime.ToString());
+            pigetter.setEndDateTime(this.endDateTime.ToString());
 
             //Threading setup. The threads are use for concurrency...and I don't really want these data gattering and sending operaitons on the main thread 
             //var pitask = Task.Run(() => this.pigetter);

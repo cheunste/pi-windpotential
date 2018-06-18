@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using System.Net;
+using System.Web.Script.Serialization;
 
 
 namespace derp
@@ -23,6 +24,9 @@ namespace derp
         private Dictionary<String,int> dnpIndexDict;
         private Dictionary<String,String> ipAddressDict;
         private Dictionary<String,String> siteDict;
+
+        //Reference to the MainWindow
+        MainWindow mainWindow;
 
         //The rtu List
         private List<String[]> klondikeRTUList;
@@ -59,6 +63,7 @@ namespace derp
 
         //Constructor
         public rtuSender(){
+
             //Sets the dictionary that maps Tags to a site
             this.piToDNPDict = new Dictionary<String, String>();
             this.dnpIndexDict = new Dictionary<String, int>();
@@ -115,21 +120,21 @@ namespace derp
             juniperRTUList.Clear();
 
             //the site Lists
-            kl1.Clear();
-            kl2.Clear();
-            k3A.Clear();
-            k3GE.Clear();
-            k3S.Clear();
-            k3mhi.Clear();
-            hc1.Clear();
-            sp1.Clear();
-            lj2a.Clear();
-            lj2b.Clear();
-            ps1.Clear();
-            bh1.Clear();
-            bh2.Clear();
-            jc1.Clear();
-            masterList.Clear();
+            this.kl1.Clear();
+            this.kl2.Clear();
+            this.k3A.Clear();
+            this.k3GE.Clear();
+            this.k3S.Clear();
+            this.k3mhi.Clear();
+            this.hc1.Clear();
+            this.sp1.Clear();
+            this.lj2a.Clear();
+            this.lj2b.Clear();
+            this.ps1.Clear();
+            this.bh1.Clear();
+            this.bh2.Clear();
+            this.jc1.Clear();
+            this.masterList.Clear();
 
         }
 
@@ -309,17 +314,18 @@ namespace derp
         //Function to send to RTU
         public void sendToRTU(){
             buildMasterList();
-            foreach(List<String[]> tempList in masterList){
+            foreach(List<String[]> tempList in this.masterList){
 
                 Console.WriteLine(tempList);
                 //Start threading here
                 String dnpTag = this.piToDNPDict[tempList[0][0]];
+                Console.WriteLine(dnpTag);
                 String ipAddress = this.ipAddressDict[dnpTag];
                 String siteName = this.siteDict[dnpTag];
                 int indexNumber = this.dnpIndexDict[dnpTag];
 
-                Thread t = new Thread(()=>packageData(ipAddress,indexNumber,dnpTag,siteName,tempList));
-                t.Start();
+                    Thread t = new Thread(() => packageData(ipAddress, indexNumber, dnpTag, siteName, tempList));
+                    t.Start();
                 /*
                  * TODO:
                  * - Start thread with the six parmameters
@@ -331,19 +337,18 @@ namespace derp
         private void packageData(String ipAddress,int indexNumber,String tagName, String siteName,List<String[]> piDataList){
             int temp = 0;
             while(this.state== true){
-                String value =piDataList.ElementAt(0)[1];
+                String value = (double.Parse(piDataList.ElementAt(temp)[1]) * 1000).ToString("0.00");
                 String data =
                     "{\"index\": "+indexNumber+", \"overRange\": False, \"name\": "
                     +tagName+", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": "
                     +siteName+", \"value\": "
                     +value+", \"communicationsLost\": False, \"remoteForced\": False, \"online\": True, \"device\": \"Wind Node RTAC\", \"localForced\": False, \"eventClass\": 2, \"type\": \"analogInputPoint\", \"referenceError\": False, \"restart\": False}";
-
-                //callRTU(ipAddress,data);
-                callRTU();
+                //You might need to write to the tab windows here 
+                callRTU(ipAddress,data);
 
                 //Add the delay here
                 //Wait one time interval. Only escape this if there is an interrupt (Change in either timestamps, update/sampling time or toggle button state)
-                var cancelled = this.token.WaitHandle.WaitOne(this.updateInterval.Add(new TimeSpan(0,0,10)));
+                var cancelled = this.token.WaitHandle.WaitOne(getUpdateInterval());
                 if (cancelled && this.state ==false ){
                     Console.WriteLine("Cancelled");
                     recreateToken();
@@ -362,7 +367,7 @@ namespace derp
                  * 
                  */
                 temp++;
-                if (temp > piDataList.Count){
+                if (temp >= piDataList.Count){
                     temp = 0;
                 }
 
@@ -375,6 +380,7 @@ namespace derp
             httpWebRequestData.Method = "POST";
             Random rnd = new Random();
             String randomNumber = rnd.Next(0,20000).ToString();
+            String ipAddress = "http://127.0.0.1:8080/servlet/jsonapi";
             string data =
                 "{\"index\": 1, \"overRange\": False, \"name\": \"STPOI_AGC_AvailablePwr_I\", \"staticType\": {\"group\": 30, \"variation\": 3}, \"eventType\": {\"group\": 32, \"variation\": 3}, \"site\": \"Klondike\", \"value\":"
                +randomNumber+ 
@@ -392,6 +398,45 @@ namespace derp
                     var result = streamReader.ReadToEnd();
                     Console.WriteLine(result);
                 }
+
+            //This is where you get the values from the RTU
+            httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
+            httpWebRequestData.ContentType = "application/json";
+            httpWebRequestData.Method = "POST";
+            try {
+                
+                httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
+                using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                {
+                    string outstation = "{\"device\":\"Wind Node RTAC\",\"type\": \"getDevice\", \"site\": \"Klondike\"}";
+                    streamWriter.Write(outstation);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+
+                var httpResponse = (HttpWebResponse)httpWebRequestData.GetResponse();
+                var jss = new JavaScriptSerializer();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+
+                    Console.WriteLine(result);
+                    var dict = jss.Deserialize<dynamic>(result);
+                    var temp = dict["analogInputPoints"][2]["value"];
+                    Console.WriteLine("fuck: " + temp);
+
+                }
+
+            }
+            catch(Exception e)
+            {
+
+            }
+
+
+
+
         }
 
         //The overloaded version of the callRTU method
@@ -414,7 +459,35 @@ namespace derp
                     }
             }
             catch(Exception e){
-                throw e;
+                //At this point, you'll get some sort of connection error. I'm just going to ignore said error.
+
+            }
+        }
+
+        private String callStreamWriter(String ipAddress, String data) { 
+            try{
+                var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
+                httpWebRequestData.ContentType = "application/json";
+                httpWebRequestData.Method = "POST";
+                String result;
+                    using (var streamWriter = new StreamWriter(httpWebRequestData.GetRequestStream()))
+                    {
+                            streamWriter.Write(data);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                    }
+                    var httpResponseData = (HttpWebResponse)httpWebRequestData.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponseData.GetResponseStream()))
+                    {
+                        result = streamReader.ReadToEnd();
+                        Console.WriteLine(result);
+                    }
+                return result;
+            }
+            catch(Exception e){
+                String temp="Unable to write to RTU at " + ipAddress;
+                Console.WriteLine(temp);
+                return temp;
 
             }
         }
