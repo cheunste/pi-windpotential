@@ -459,7 +459,14 @@ namespace derp
                     }
             }
             catch(Exception e){
-                //At this point, you'll get some sort of connection error. I'm just going to ignore said error.
+                /*
+                At this point, you'll get some sort of connection error. I'm just going to ignore said error.
+                Because said error will only get generated either:
+                1) Because some idito shut down jDNP3 on the remote side
+                2) Connection to the dev RTUs were lost because the jump host went to sleep 
+                3) Some idiot changed the IP addresses without telling me
+                */
+                
 
             }
         }
