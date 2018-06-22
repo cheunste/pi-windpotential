@@ -378,7 +378,7 @@ namespace piWindPotential
 
             }
         }
-        //Function to call RTU
+        //The testing Function to call RTU. Only works with localhost
         private void callRTU(){
             var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/servlet/jsonapi");
             httpWebRequestData.ContentType = "application/json";
@@ -436,6 +436,8 @@ namespace piWindPotential
             }
             catch(Exception e)
             {
+                //Not entirely sure how I should handle this. After all, if the connection to the RTU fails...that means someone shut off jDNP3 on the remote host or that the entire VM is off.
+                //However, at the same time, the user will be looking at the RTU anyway to see how it reacts
 
             }
 
@@ -444,7 +446,7 @@ namespace piWindPotential
 
         }
 
-        //The overloaded version of the callRTU method
+        //The overloaded version of the callRTU method. Used to send data to the RTU
         private void callRTU(String ipAddress,String data){
             try{
                 var httpWebRequestData = (HttpWebRequest)WebRequest.Create("http://"+ipAddress+":8080/servlet/jsonapi");
