@@ -30,6 +30,7 @@ namespace piWindPotential
         private List<String> jonesOutput;
         private List<String> juniperOutput;
         private List<String> klondikeOutput;
+        private csvOuptut csvOutput;
 
         public MainWindow()
         {
@@ -52,14 +53,12 @@ namespace piWindPotential
             StartTimePicker.DefaultValue = this.startDateTime;
             EndTimePicker.DefaultValue = this.endDateTime;
 
-
-
             pigetter.setStartDateTime(this.startDateTime.ToString());
             pigetter.setEndDateTime(this.endDateTime.ToString());
 
-            //Threading setup. The threads are use for concurrency...and I don't really want these data gattering and sending operaitons on the main thread 
-            //var pitask = Task.Run(() => this.pigetter);
-            //var rtuTask = Task.Run(() => this.rtusender);
+            //reference to the csvOutuput
+            this.csvOutput = new csvOuptut();
+
         }
 
         private void enableState(object sender, RoutedEventArgs e)
@@ -75,6 +74,8 @@ namespace piWindPotential
         private void disableState(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("program disabled");
+            this.csvOutput.closeFile();
+            //close the csv file by killing the office process
             this.rtusender.setState(false);
             this.rtusender.cancelRTUCalls();
             disable();

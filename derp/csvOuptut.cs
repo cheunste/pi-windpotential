@@ -23,7 +23,7 @@ namespace piWindPotential
             //Write the tag Names Headers
             for(int i=0; i <= masterList.Count - 1; i++)
             {
-               line += masterList[i][0][0]+"\t\t\t";
+               line += masterList[i][0][0]+",,,";
             }
             sw.WriteLine(line);
 
@@ -31,7 +31,7 @@ namespace piWindPotential
             line = "";
             for(int i=0; i <= masterList.Count - 1; i++)
             {
-                line += "Time Stamp\tPotential (kW)\t\t";
+                line += "Time Stamp,Potential (kW),,";
             }
             sw.WriteLine(line);
 
@@ -43,7 +43,7 @@ namespace piWindPotential
                 {
                     double value = double.Parse(masterList[j][i][1]) * 1000;
                     String timestamp = masterList[j][i][2];
-                    line += timestamp+"\t"+value.ToString()+"\t\t";
+                    line += timestamp+","+value.ToString()+",,";
                 }
                 sw.WriteLine(line);
 
@@ -59,7 +59,15 @@ namespace piWindPotential
 
         public void openFile()
         {
+            //Process csvProcess = new Process();
+            //Process.Start("C:\\Program Files (x86)\\LibreOffice 5\\program\\scalc.exe", getFileName());
             //ProcessStartInfo info = new ProcessStartInfo(@"C:\Program Files (x86)\Notepad++\notepad++.exe", getFileName());
+            Process.Start(getFileName());
+        }
+
+        public void closeFile()
+        {
+            Process.GetProcessesByName("soffice");
         }
     }
 }
