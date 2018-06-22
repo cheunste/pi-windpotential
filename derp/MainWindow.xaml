@@ -10,7 +10,7 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="PWP: PI Wind Potential" Height="600" Width="600" >
+        Title="PWP: PI Wind Potential" Height="300" Width="600" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -77,58 +77,6 @@
         <Label x:Name="samplingLabel" Content="Sampling Time (minutes):" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" Margin="14,160,0,392"/>
         <TextBox x:Name="samplingTextbox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="88" SelectionOpacity="3" FontSize="16" Text="5" TextAlignment="Center" Margin="194,0,0,382"  KeyDown="samplingTimeTextBox" LostFocus="samplingTimeTextBox" RenderTransformOrigin="0.5,0.5"/>
         <!-- Tab Control-->
-        <TabControl Margin="10,243,10,10" SelectionChanged="TabControl_SelectionChanged">
-            <TabItem Header="Big Horn" >
-                <TextBox
-                    Style="{StaticResource MaterialDesignTextAreaTextBox}"
-                    x:Name="BigHornTextField"
-                    Margin="0,0,0,-2"
-                    VerticalAlignment="Top"
-                    Height="285"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto"
-                />
-
-            </TabItem>
-            <TabItem Header="Juniper">
-                <TextBox
-                    Style="{StaticResource MaterialDesignTextAreaTextBox}"
-                    x:Name="JuniperTextField"
-                    Margin="0,0,0,0"
-                    VerticalAlignment="Top"
-                    Height="267"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto"
-                    />
-            </TabItem>
-            <TabItem Header="Jones">
-                <TextBox
-                    Style="{StaticResource MaterialDesignTextAreaTextBox}"
-                    x:Name="JonesTextField"
-                    Margin="0,0,0,0"
-                    VerticalAlignment="Top"
-                    Height="267"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto"
-                    />
-            </TabItem>
-            <TabItem Header="Klondike">
-                <TextBox
-                    Style="{StaticResource MaterialDesignTextAreaTextBox}"
-                    x:Name="KlondikeTextField"
-                    Margin="0,0,0,0"
-                    VerticalAlignment="Top"
-                    Height="267"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalScrollBarVisibility="Auto"
-                    />
-
-            </TabItem>
-        </TabControl>
 
     </Grid>
 
