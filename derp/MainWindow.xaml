@@ -73,9 +73,9 @@
         </StackPanel>
 
         <Label x:Name="UpdateLabel" Content="Update Time (minutes):" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" Margin="310,161,0,391"/>
-        <TextBox x:Name="rtuUpdateTextbox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="88" SelectionOpacity="3" FontSize="16" Text="5" TextAlignment="Center" Margin="490,0,0,385"  KeyDown="updateTimeTextBox" LostFocus="updateTimeTextBox" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox x:Name="rtuUpdateTextbox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="88" SelectionOpacity="3" FontSize="16" Text="0.5" TextAlignment="Center" Margin="490,0,0,385"  KeyDown="updateTimeTextBox" LostFocus="updateTimeTextBox" RenderTransformOrigin="0.5,0.5"/>
         <Label x:Name="samplingLabel" Content="Sampling Time (minutes):" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" Margin="14,160,0,392"/>
-        <TextBox x:Name="samplingTextbox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="88" SelectionOpacity="3" FontSize="16" Text="5" TextAlignment="Center" Margin="194,0,0,382"  KeyDown="samplingTimeTextBox" LostFocus="samplingTimeTextBox" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox x:Name="samplingTextbox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="88" SelectionOpacity="3" FontSize="16" Text="0.5" TextAlignment="Center" Margin="194,0,0,382"  KeyDown="samplingTimeTextBox" LostFocus="samplingTimeTextBox" RenderTransformOrigin="0.5,0.5"/>
         <!-- Tab Control-->
 
     </Grid>
