@@ -50,8 +50,8 @@ namespace piWindPotential
             this.startDateTime = DateTime.Now.AddHours(-1.00) ;
             this.endDateTime = DateTime.Now;
 
-            StartTimePicker.DefaultValue = this.startDateTime;
-            EndTimePicker.DefaultValue = this.endDateTime;
+            StartTimePicker.DefaultValue = startDateTime;
+            EndTimePicker.DefaultValue = endDateTime;
 
             pigetter.setStartDateTime(this.startDateTime.ToString());
             pigetter.setEndDateTime(this.endDateTime.ToString());
