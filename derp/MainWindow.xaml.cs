@@ -109,7 +109,7 @@ namespace piWindPotential
 
                 this.rtusender.setUpdateInterval(updateTime);
                 this.rtusender.setList(pigetter.getList());
-                this.rtusender.sendToRTU();           
+                //this.rtusender.sendToRTU();           
             }
             else
             {

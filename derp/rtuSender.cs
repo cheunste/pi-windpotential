@@ -244,53 +244,7 @@ namespace piWindPotential
         public void setList(List<String[]> valueList){
 
             foreach (String[] tempArray in valueList){
-                //At this point, you'll need to split this into different arrays. One for each of the RTUs
-                //based on the PI tag.
-                switch(tempArray[0]){
-                    case "KL1.WF.WPot.CORE":
-                        addToList(this.kl1,tempArray);
-                        break;
-                    case "KL2.WF.WPot.CORE":
-                        addToList(this.kl2,tempArray);
-                        break;
-                    case "KL3A.WF.WPot.CORE":
-                        addToList(this.k3A,tempArray);
-                        break;
-                    case "KL3GE.WF.WPot.CORE":
-                        addToList(this.k3GE,tempArray);
-                        break;
-                    case "KL3SW.WF.WPot.CORE":
-                        addToList(this.k3S,tempArray);
-                        break;
-                    case "KL3MHI.WF.WPot.CORE":
-                        addToList(this.k3mhi,tempArray);
-                        break;
-                    case "HC1.WF.WPot.CORE":
-                        addToList(this.hc1,tempArray);
-                        break;
-                    case "SP1.WF.WPot.CORE":
-                        addToList(this.sp1,tempArray);
-                        break;
-                    case "LJ2A.WF.WPot.CORE":
-                        addToList(this.lj2a,tempArray);
-                        break;
-                    case "LJ2B.WF.WPot.CORE":
-                        addToList(this.lj2b,tempArray);
-                        break;
-                    case "PS1.WF.WPot.CORE":
-                        addToList(this.ps1,tempArray);
-                        break;
-                    case "BH1.WF.WPot.CORE":
-                        addToList(this.bh1,tempArray);
-                        break;
-                    case "BH2.WF.WPot.CORE":
-                        addToList(this.bh2,tempArray);
-                        break;
-                    case "JC1.WF.WPot.CORE":
-                        addToList(this.jc1,tempArray);
-                        break;
-                }
-
+                //At this point, you'll just need to write this to the OPC Server
             }
             //Put all the lists above into a master list. Now you have a way to iterate over everything
             //After splitting the arrays, you then need to send the data. 

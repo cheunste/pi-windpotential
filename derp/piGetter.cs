@@ -30,11 +30,8 @@ namespace piWindPotential
         //This is the array of all the potential tags in the Gorge 
         private String[] windNodePotentialTags =
         {
-                "KL1.WF.WPot.CORE", "KL2.WF.WPot.CORE", "KL3A.WF.WPot.CORE",
-                "KL3GE.WF.WPot.CORE", "KL3SW.WF.WPot.CORE", "KL3MHI.WF.WPot.CORE",
-                "HC1.WF.WPot.CORE", "SP1.WF.WPot.CORE", "LJ2A.WF.WPot.CORE",
-                "LJ2B.WF.WPot.CORE", "PS1.WF.WPot.CORE", "BH1.WF.WPot.CORE",
-                "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE"
+            "HA1.T0001.WNAC.WdSpd",    "HA1.T0002.WNAC.WdSpd",    "HA1.T0003.WNAC.WdSpd",    "HA1.T0001.WROT.RotSpd",   "HA1.T0002.WROT.RotSpd",   "HA1.T0003.WROT.RotSpd",   "HA1.T0001.WTUR.NoiseLev", "HA1.T0002.WTUR.NoiseLev", "HA1.T0003.WTUR.NoiseLev", "HA1.T0001.WTUR.TurSt.actSt",
+            "HA1.T0002.WTUR.TurSt.actSt",  "HA1.T0003.WTUR.TurSt.actSt",  "HA1.T0001.WNAC.ExTmp",    "HA1.T0002.WNAC.ExTmp",    "HA1.T0003.WNAC.ExTmp",    "HA1.MET1.WMET1.AvMetAlt1Hum", "HA1.MET2.WMET1.AvMetAlt1Tmp", "HA1.MET2.WMET1.AvMetAlt6Hum", "HA1.MET2.WMET1.AvMetAlt6Tmp",
         };
         //This is the list of values that is fetched from PI
         private List<String[]> valueList;
@@ -85,8 +82,10 @@ namespace piWindPotential
                     Console.WriteLine(temp[0]+", "+temp[1]+", "+temp[2]);
                     this.valueList.Add(temp);
                 }
+                //Replace the following
                 //this.rtu.setArray(this.valueList);
             }
+            //Replace the following
             //this.rtu.sendToRTU();
         }
 
