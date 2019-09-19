@@ -7,7 +7,7 @@ using System.Threading;
 using System.IO;
 using System.Net;
 using System.Web.Script.Serialization;
-
+using OpcLabs.EasyOpc.DataAccess;
 
 namespace piWindPotential
 {
