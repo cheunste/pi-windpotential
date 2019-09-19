@@ -35,6 +35,8 @@ namespace piWindPotential
             "HA1.T0001.WNAC.WdSpd",    "HA1.T0002.WNAC.WdSpd",    "HA1.T0003.WNAC.WdSpd",    "HA1.T0001.WROT.RotSpd",   "HA1.T0002.WROT.RotSpd",   "HA1.T0003.WROT.RotSpd",   "HA1.T0001.WTUR.NoiseLev", "HA1.T0002.WTUR.NoiseLev", "HA1.T0003.WTUR.NoiseLev", "HA1.T0001.WTUR.TurSt.actSt",
             "HA1.T0002.WTUR.TurSt.actSt",  "HA1.T0003.WTUR.TurSt.actSt",  "HA1.T0001.WNAC.ExTmp",    "HA1.T0002.WNAC.ExTmp",    "HA1.T0003.WNAC.ExTmp",    "HA1.MET1.WMET1.AvMetAlt1Hum", "HA1.MET2.WMET1.AvMetAlt1Tmp", "HA1.MET2.WMET1.AvMetAlt6Hum", "HA1.MET2.WMET1.AvMetAlt6Tmp",
         };
+        private List<String> piTags;
+        private List<String> opcTags;
         //This is the list of values that is fetched from PI
         private List<String[]> valueList;
         private AFTimeRange aFTimeRange;
@@ -53,6 +55,8 @@ namespace piWindPotential
             this.piServer = pIServers.DefaultPIServer;
 
             this.valueList = new List<String[]>();
+            this.piTags = new List<String>();
+            this.opcTags = new List<String>();
 
         }
 
@@ -74,18 +78,20 @@ namespace piWindPotential
             var reader = new StreamReader("./pi-opc.csv");
             var csv = new CsvReader(reader);
 
+
             using (csv = new CsvReader(reader))
             {
                 var records = csv.GetRecords<PI_OPC>();
-                records.ToList();
-
-foreach(var temp in records.ToList())
-            {
-                Console.WriteLine("OPC Tag:" +temp.OpcTag);
-                Console.WriteLine("PI Tag:" +temp.PITag);
-
+                foreach(var temp in records.ToList())
+                {
+                    piTags.Add(temp.PITag);
+                    opcTags.Add(temp.OpcTag);
+                    Console.WriteLine("OPC Tag:" +temp.OpcTag);
+                    Console.WriteLine("PI Tag:" +temp.PITag);
+                }
             }
-            }
+            Console.WriteLine(piTags.Count());
+            Console.WriteLine(opcTags.Count());
 
             
                 //foreach (String windNodeTag in windNodePotentialTags)
