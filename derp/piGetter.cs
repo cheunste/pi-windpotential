@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OSIsoft.AF.Asset;
 using OSIsoft.AF.PI;
 using OSIsoft.AF.Time;
+using CsvHelper;
 
 
 namespace piWindPotential
@@ -39,6 +41,7 @@ namespace piWindPotential
         private TimeSpan samplingInterval;
         private AFTimeSpan span;
 
+
         //Constructor
         public piGetter()
         {
@@ -67,24 +70,42 @@ namespace piWindPotential
             //this.interval = new TimeSpan(0, 5, 0);
             this.span = new AFTimeSpan(this.samplingInterval);
 
-            foreach (String windNodeTag in windNodePotentialTags)
-            {
-                PIPoint pi_point = PIPoint.FindPIPoint(this.piServer, windNodeTag);
-                //tagList.Add(pi_point.RecordedValues(aFTimeRange, OSIsoft.AF.Data.AFBoundaryType.Inside, "", false).ToString());
-                AFValues interpolated = pi_point.InterpolatedValues(this.aFTimeRange, this.span, "", false);
+            //Read the csv file pi-opc.csv here
+            var reader = new StreamReader("./pi-opc.csv");
+            var csv = new CsvReader(reader);
 
-                foreach (AFValue value in interpolated)
-                {
-                    String[] temp ={windNodeTag, value.Value.ToString(), value.Timestamp.ToString()};
-                    //Temp 0: Name of Wind Node Tag 
-                    //Temp 1: Value of the tag
-                    //Temp 2: Time Stamp of the tag
-                    Console.WriteLine(temp[0]+", "+temp[1]+", "+temp[2]);
-                    this.valueList.Add(temp);
-                }
-                //Replace the following
-                //this.rtu.setArray(this.valueList);
+            using (csv = new CsvReader(reader))
+            {
+                var records = csv.GetRecords<PI_OPC>();
+                records.ToList();
+
+foreach(var temp in records.ToList())
+            {
+                Console.WriteLine("OPC Tag:" +temp.OpcTag);
+                Console.WriteLine("PI Tag:" +temp.PITag);
+
             }
+            }
+
+            
+                //foreach (String windNodeTag in windNodePotentialTags)
+                //{
+                //    PIPoint pi_point = PIPoint.FindPIPoint(this.piServer, windNodeTag);
+                //    //tagList.Add(pi_point.RecordedValues(aFTimeRange, OSIsoft.AF.Data.AFBoundaryType.Inside, "", false).ToString());
+                //    AFValues interpolated = pi_point.InterpolatedValues(this.aFTimeRange, this.span, "", false);
+
+                //    foreach (AFValue value in interpolated)
+                //    {
+                //        String[] temp = { windNodeTag, value.Value.ToString(), value.Timestamp.ToString() };
+                //        //Temp 0: Name of Wind Node Tag 
+                //        //Temp 1: Value of the tag
+                //        //Temp 2: Time Stamp of the tag
+                //        Console.WriteLine(temp[0] + ", " + temp[1] + ", " + temp[2]);
+                //        this.valueList.Add(temp);
+                //    }
+                //    //Replace the following
+                //    //this.rtu.setArray(this.valueList);
+                //}
             //Replace the following
             //this.rtu.sendToRTU();
         }
