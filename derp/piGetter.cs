@@ -34,7 +34,7 @@ namespace piWindPotential
                 "KL3GE.WF.WPot.CORE", "KL3SW.WF.WPot.CORE", "KL3MHI.WF.WPot.CORE",
                 "HC1.WF.WPot.CORE", "SP1.WF.WPot.CORE", "LJ2A.WF.WPot.CORE",
                 "LJ2B.WF.WPot.CORE", "PS1.WF.WPot.CORE", "BH1.WF.WPot.CORE",
-                "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE"
+                "BH2.WF.WPot.CORE", "JC1.WF.WPot.CORE","WY1.SF.W"
         };
         //This is the list of values that is fetched from PI
         private List<String[]> valueList;

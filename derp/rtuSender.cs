@@ -49,6 +49,7 @@ namespace piWindPotential
         private List<String[]> bh1;
         private List<String[]> bh2;
         private List<String[]> jc1;
+        private List<String[]> wy1;
         private List<List<String[]>> masterList;
 
         //State
@@ -91,6 +92,7 @@ namespace piWindPotential
             this.bh1 = new List<String[]>();
             this.bh2 = new List<String[]>();
             this.jc1 = new List<String[]>();
+            this.wy1 = new List<String[]>();
             this.masterList = new List<List<String[]>>();
 
             //set up cancellation tokens
@@ -134,6 +136,7 @@ namespace piWindPotential
             this.bh1.Clear();
             this.bh2.Clear();
             this.jc1.Clear();
+            this.wy1.Clear();
             this.masterList.Clear();
 
         }
@@ -154,6 +157,7 @@ namespace piWindPotential
             this.masterList.Add(bh1);
             this.masterList.Add(bh2);
             this.masterList.Add(jc1);
+            this.masterList.Add(wy1);
         }
 
         //This method cancels all ongoing RTU calls
@@ -176,6 +180,7 @@ namespace piWindPotential
             this.piToDNPDict.Add("BH1.WF.WPot.CORE","BIGHO_AGC_AvailablePwr_I");
             this.piToDNPDict.Add("BH2.WF.WPot.CORE","BIGH2_AGC_AvailablePwr_I");
             this.piToDNPDict.Add("JC1.WF.WPot.CORE","JUNCA_AGC_AvailablePwr_I");
+            this.piToDNPDict.Add("WY1.SF.W","WYEAS_AGC_AvailablePwr_I");
         }
 
         private void setUpdnpIndexDict(){
@@ -193,6 +198,7 @@ namespace piWindPotential
             this.dnpIndexDict.Add("BIGHO_AGC_AvailablePwr_I",2);
             this.dnpIndexDict.Add("BIGH2_AGC_AvailablePwr_I",14);
             this.dnpIndexDict.Add("JUNCA_AGC_AvailablePwr_I",2);
+            this.dnpIndexDict.Add("WYEAS_AGC_AvailablePwr_I",100);
         }
         private void setSiteDict(){
             this.siteDict.Add("KLON1_AGC_AvailablePwr_I","Klondike");
@@ -209,6 +215,7 @@ namespace piWindPotential
             this.siteDict.Add("BIGHO_AGC_AvailablePwr_I","BigHorn");
             this.siteDict.Add("BIGH2_AGC_AvailablePwr_I","BigHorn");
             this.siteDict.Add("JUNCA_AGC_AvailablePwr_I","JuniperCanyon");
+            this.siteDict.Add("WYEAS_AGC_AvailablePwr_I","Klondike");
         }
 
         private void setUpIPAddressDict(){
@@ -226,6 +233,7 @@ namespace piWindPotential
             this.ipAddressDict.Add("BIGHO_AGC_AvailablePwr_I","10.41.55.20");
             this.ipAddressDict.Add("BIGH2_AGC_AvailablePwr_I","10.41.55.20");
             this.ipAddressDict.Add("JUNCA_AGC_AvailablePwr_I","172.21.1.19");
+            this.ipAddressDict.Add("WYEAS_AGC_AvailablePwr_I", "10.41.58.124");
         }
         //Setter funtion to set the RTU update time, in seconds
         public void setUpdateTime(TimeSpan time)
@@ -246,6 +254,7 @@ namespace piWindPotential
             foreach (String[] tempArray in valueList){
                 //At this point, you'll need to split this into different arrays. One for each of the RTUs
                 //based on the PI tag.
+                Console.WriteLine(tempArray[0]);
                 switch(tempArray[0]){
                     case "KL1.WF.WPot.CORE":
                         addToList(this.kl1,tempArray);
@@ -288,6 +297,9 @@ namespace piWindPotential
                         break;
                     case "JC1.WF.WPot.CORE":
                         addToList(this.jc1,tempArray);
+                        break;
+                    case "WY1.SF.W":
+                        addToList(this.wy1,tempArray);
                         break;
                 }
 
