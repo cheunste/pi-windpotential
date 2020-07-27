@@ -33,6 +33,7 @@ namespace piWindPotential
         private List<String[]> bigHornRTUList;
         private List<String[]> jonesRTUList;
         private List<String[]> juniperRTUList;
+        private List<String[]> montagueRTUList;
 
         //the site Lists
         private List<String[]> kl1;
@@ -50,6 +51,7 @@ namespace piWindPotential
         private List<String[]> bh2;
         private List<String[]> jc1;
         private List<String[]> wy1;
+        private List<String[]> mg1;
         private List<List<String[]>> masterList;
 
         //State
@@ -78,6 +80,8 @@ namespace piWindPotential
             this.bigHornRTUList = new List<String[]>();
             this.jonesRTUList = new List<String[]>();
             this.juniperRTUList = new List<String[]>();
+            this.montagueRTUList = new List<String[]>();
+
             this.kl1 = new List<String[]>();
             this.kl2 = new List<String[]>();
             this.k3A = new List<String[]>();
@@ -93,6 +97,8 @@ namespace piWindPotential
             this.bh2 = new List<String[]>();
             this.jc1 = new List<String[]>();
             this.wy1 = new List<String[]>();
+            this.mg1 = new List<String[]>();
+
             this.masterList = new List<List<String[]>>();
 
             //set up cancellation tokens
@@ -120,6 +126,7 @@ namespace piWindPotential
             bigHornRTUList.Clear();
             jonesRTUList.Clear();
             juniperRTUList.Clear();
+            montageRTUList.Clear();
 
             //the site Lists
             this.kl1.Clear();
@@ -137,6 +144,8 @@ namespace piWindPotential
             this.bh2.Clear();
             this.jc1.Clear();
             this.wy1.Clear();
+            this.mg.Clear();
+
             this.masterList.Clear();
 
         }
@@ -158,6 +167,7 @@ namespace piWindPotential
             this.masterList.Add(bh2);
             this.masterList.Add(jc1);
             this.masterList.Add(wy1);
+            this.masterList.Add(mg1);
         }
 
         //This method cancels all ongoing RTU calls
@@ -181,6 +191,7 @@ namespace piWindPotential
             this.piToDNPDict.Add("BH2.WF.WPot.CORE","BIGH2_AGC_AvailablePwr_I");
             this.piToDNPDict.Add("JC1.WF.WPot.CORE","JUNCA_AGC_AvailablePwr_I");
             this.piToDNPDict.Add("WY1.SF.W","WYEAS_AGC_AvailablePwr_I");
+            this.piToDNPDict.Add("MG1.WF.WPot.CORE","MONTA_AGC_AvailablePwr_I");
         }
 
         private void setUpdnpIndexDict(){
@@ -199,6 +210,7 @@ namespace piWindPotential
             this.dnpIndexDict.Add("BIGH2_AGC_AvailablePwr_I",14);
             this.dnpIndexDict.Add("JUNCA_AGC_AvailablePwr_I",2);
             this.dnpIndexDict.Add("WYEAS_AGC_AvailablePwr_I",100);
+            this.dnpIndexDict.Add("MONTA_AGC_AvailablePwr_I",2);
         }
         private void setSiteDict(){
             this.siteDict.Add("KLON1_AGC_AvailablePwr_I","Klondike");
@@ -216,6 +228,7 @@ namespace piWindPotential
             this.siteDict.Add("BIGH2_AGC_AvailablePwr_I","BigHorn");
             this.siteDict.Add("JUNCA_AGC_AvailablePwr_I","JuniperCanyon");
             this.siteDict.Add("WYEAS_AGC_AvailablePwr_I","Klondike");
+            this.siteDict.Add("MONTA_AGC_AvailablePwr_I","Montague");
         }
 
         private void setUpIPAddressDict(){
@@ -234,6 +247,7 @@ namespace piWindPotential
             this.ipAddressDict.Add("BIGH2_AGC_AvailablePwr_I","10.41.55.20");
             this.ipAddressDict.Add("JUNCA_AGC_AvailablePwr_I","172.21.1.19");
             this.ipAddressDict.Add("WYEAS_AGC_AvailablePwr_I", "10.41.58.124");
+            this.ipAddressDict.Add("MONTA_AGC_AvailablePwr_I","10.41.133.34");
         }
         //Setter funtion to set the RTU update time, in seconds
         public void setUpdateTime(TimeSpan time)
@@ -301,6 +315,10 @@ namespace piWindPotential
                     case "WY1.SF.W":
                         addToList(this.wy1,tempArray);
                         break;
+                    case "MG1.WF.WPot.CORE":
+                        addToList(this.mg1,tempArray);
+                        break;
+
                 }
 
             }
